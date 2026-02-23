@@ -30,6 +30,38 @@ import { API_BASE_URL } from "@/lib/constants";
 
 
 export default function DashboardPage() {
+    const [user, setUser] = React.useState<any>(null);
+    const [greeting, setGreeting] = React.useState("Good afternoon");
+
+    React.useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                console.error("Failed to parse user", e);
+            }
+        }
+
+        const updateGreeting = () => {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) {
+                setGreeting("Good morning");
+            } else if (hour >= 12 && hour < 17) {
+                setGreeting("Good afternoon");
+            } else {
+                setGreeting("Good evening");
+            }
+        };
+
+        updateGreeting();
+        // Update greeting every minute in case the hour changes while user is on page
+        const interval = setInterval(updateGreeting, 60000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const firstName = user?.name ? user.name.split(' ')[0] : "";
+
     return (
         <div className="max-w-[1200px] mx-auto space-y-8">
             {/* Greeting */}
@@ -39,7 +71,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                     <h1 className="text-2xl font-bold dark:text-white tracking-tight">
-                        Good afternoon, binay poudel!
+                        {greeting}, {firstName || "student"}!
                     </h1>
                     <p className="text-slate-500 text-sm">Which study set are you working on today?</p>
                 </div>
@@ -57,20 +89,20 @@ export default function DashboardPage() {
                     <span className="font-bold text-sm">AI Digest</span>
                 </div>
 
-                <div className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 px-6 py-3 rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+                <Link href="/app/notes?upload=true" className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 px-6 py-3 rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                     <div className="p-1.5 border border-dashed border-slate-400 dark:border-slate-600 rounded-lg group-hover:bg-primary/10 group-hover:border-primary transition-all">
                         <Plus className="w-4 h-4 text-slate-400 group-hover:text-primary" />
                     </div>
-                    <span className="font-bold text-sm text-slate-700 dark:text-slate-300">Add Set</span>
-                </div>
+                    <span className="font-bold text-sm text-slate-700 dark:text-slate-300">Upload Files</span>
+                </Link>
 
                 <div className="ml-auto hidden md:flex items-center gap-4">
-                    <button className="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
-                        <Plus className="w-4 h-4" /> Add Set
-                    </button>
-                    <button className="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
-                        <BookOpen className="w-4 h-4" /> See All My Sets
-                    </button>
+                    <Link href="/app/notes?upload=true" className="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
+                        <Plus className="w-4 h-4" /> Upload Files
+                    </Link>
+                    <Link href="/app/notes" className="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
+                        <BookOpen className="w-4 h-4" /> See All Resources
+                    </Link>
                 </div>
             </div>
 
@@ -170,7 +202,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Upcoming Widget */}
-                    <div className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
+                    {/* <div className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-6">
                         <div className="flex items-center justify-between text-slate-400">
                             <div className="flex items-center gap-2">
                                 <Clock className="w-5 h-5" />
@@ -182,7 +214,7 @@ export default function DashboardPage() {
                             <p className="text-xs text-slate-400 font-medium">No upcoming events</p>
                         </div>
                         <button className="w-full text-center text-primary text-xs font-bold hover:underline">View All</button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

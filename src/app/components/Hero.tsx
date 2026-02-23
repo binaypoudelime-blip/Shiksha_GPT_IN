@@ -61,7 +61,7 @@ export const Hero = () => {
                     <div className="inline-block p-[1.5px] rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mb-10 shadow-lg shadow-indigo-100/50">
                         <div className="inline-flex items-center gap-x-2.5 py-2 px-5 bg-white backdrop-blur-md text-indigo-700 text-[10px] md:text-xs font-extrabold tracking-[0.15em] uppercase rounded-full">
                             <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-                            <span className="shrink-0">Nepal's First AI Platform For</span>
+                            <span className="shrink-0">India's First AI Platform For</span>
                             <div className="h-6 overflow-hidden flex items-center min-w-[80px] md:min-w-[100px]">
                                 <AnimatePresence mode="wait">
                                     <motion.span
@@ -83,7 +83,7 @@ export const Hero = () => {
                         <span className="text-gradient">Faster.</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-                        ShikshaGPT bridges the gap between personalized AI tutoring for students in K-12 and institutional standards.पाठ्यक्रम विकास केन्द्र (CDC) मा आधारित. Learn freely, but stay on track.
+                        ShikshaGPT bridges the gap between personalized AI tutoring for students in 3-12 and institutional standards.केंद्रीय माध्यमिक शिक्षा बोर्ड (CBSE) पर आधारित. Learn freely, but stay on track.
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

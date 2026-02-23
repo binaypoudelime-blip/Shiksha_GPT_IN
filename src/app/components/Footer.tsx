@@ -14,7 +14,7 @@ export const Footer = () => {
                             </span>
                         </Link>
                         <p className="text-muted-foreground leading-relaxed mb-6">
-                            Empowering Nepali students through intelligent, personalized, and accessible AI tutoring.
+                            Empowering Indian students through intelligent, personalized, and accessible AI tutoring.
                         </p>
                         <div className="flex gap-4">
                             <Link href="#" className="p-2 bg-slate-50 rounded-lg hover:bg-indigo-50 hover:text-primary transition-all">
@@ -64,7 +64,7 @@ export const Footer = () => {
 
                 <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-muted-foreground">
-                        © 2025 ShikshaGPT. All rights reserved.
+                        © 2025-2026 ShikshaGPT. All rights reserved.
                     </p>
                     <div className="flex gap-8 text-sm text-muted-foreground">
                         <p>Made with ❤️ for Learners.</p>

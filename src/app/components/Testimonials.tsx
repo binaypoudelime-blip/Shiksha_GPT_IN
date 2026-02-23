@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const reviews = [
     {
         name: "Arjun K.",
-        role: "SEE Student",
+        role: "Grade 10 Student",
         text: "ShikshaGPT helped me understand Science concepts that I was struggling with for months. The explanations are so clear!",
         rating: 5,
     },
@@ -25,12 +25,12 @@ const reviews = [
     {
         name: "Sita G.",
         role: "Grade 10 Student",
-        text: "I love how it knows exactly what's in our Nepali curriculum. It's like having a tutor 24/7.",
+        text: "I love how it knows exactly what's in our CBSE curriculum. It's like having a tutor 24/7.",
         rating: 5,
     },
     {
         name: "Binod T.",
-        role: "SEE Candidate",
+        role: "Grade 8 Student",
         text: "The best tool for mock test preparation. The instant doubt solving is just amazing.",
         rating: 5,
     },
