@@ -13,8 +13,8 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-    title: "ShikshyaGPT | Your Personal AI Tutor for Nepali Syllabus",
-    description: "Master your curriculum with our AI-powered learning assistant designed specifically for Nepali students.",
+    title: "ShikshyaGPT | Your Personal AI Tutor Anytime, Anywhere",
+    description: "Master your curriculum with our AI-powered learning assistant designed specifically for Indian students.",
     icons: {
         icon: "/logo.png",
     },
