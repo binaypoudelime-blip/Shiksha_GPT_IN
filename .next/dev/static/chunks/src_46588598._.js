@@ -81,7 +81,7 @@ __turbopack_context__.s([
     "API_BASE_URL",
     ()=>API_BASE_URL
 ]);
-const API_BASE_URL = "https://shiksha-gpt.com";
+const API_BASE_URL = "https://shiksha-gpt.in";
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }

@@ -1,0 +1,11 @@
+(globalThis.TURBOPACK_CHUNK_LISTS || (globalThis.TURBOPACK_CHUNK_LISTS = [])).push({
+    script: typeof document === "object" ? document.currentScript : undefined,
+    chunks: [
+  "static/chunks/node_modules_micromark-core-commonmark_dev_lib_fc41dd51._.js",
+  "static/chunks/node_modules_katex_dist_katex_mjs_b8ab5b3b._.js",
+  "static/chunks/node_modules_284ac159._.js",
+  "static/chunks/src_7115695e._.js",
+  "static/chunks/node_modules_katex_dist_katex_min_49ebd979.css"
+],
+    source: "dynamic"
+});

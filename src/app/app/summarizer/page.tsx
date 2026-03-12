@@ -24,6 +24,9 @@ import { API_BASE_URL } from "@/lib/constants";
 
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 interface Subject {
     _id: string;
@@ -52,7 +55,7 @@ interface Summary {
 
 interface Message {
     role: "user" | "assistant";
-    content: string;
+    content: string | any[];
     created_at: string;
 }
 
@@ -384,7 +387,8 @@ export default function SummariesPage() {
                     >
                         <div className="prose prose-slate dark:prose-invert max-w-none text-[15px] leading-relaxed markdown-content">
                             <ReactMarkdown
-                                remarkPlugins={[remarkGfm, remarkBreaks]}
+                                remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
+                                rehypePlugins={[rehypeKatex]}
                                 components={{
                                     p: ({ node, ...props }) => <p className="mb-4 last:mb-0" {...props} />,
                                     h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-8 mb-4 first:mt-0" {...props} />,
@@ -394,7 +398,17 @@ export default function SummariesPage() {
                                     ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-1 ml-4" {...props} />,
                                     li: ({ node, ...props }) => <li className="mb-1" {...props} />,
                                     blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary/30 pl-4 italic my-4 text-slate-500" {...props} />,
-                                    code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-primary" {...props} />
+                                    code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-primary" {...props} />,
+                                    table: ({ node, ...props }) => (
+                                        <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
+                                            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
+                                        </div>
+                                    ),
+                                    thead: ({ node, ...props }) => <thead className="bg-slate-50 dark:bg-white/5" {...props} />,
+                                    tbody: ({ node, ...props }) => <tbody className="bg-white dark:bg-transparent divide-y divide-slate-100 dark:divide-slate-800" {...props} />,
+                                    tr: ({ node, ...props }) => <tr {...props} />,
+                                    th: ({ node, ...props }) => <th className="px-5 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider" {...props} />,
+                                    td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
                                 }}
                             >
                                 {activeSummary.summary_text ? activeSummary.summary_text.replace(/\\n/g, '\n') : activeSummary.summary_preview?.replace(/\\n/g, '\n')}
@@ -420,15 +434,46 @@ export default function SummariesPage() {
                             key={idx}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`max-w-[85%] rounded-2xl px-5 py-3 text-[15px] ${msg.role === 'user'
-                                ? 'bg-primary text-white shadow-lg shadow-primary/10'
-                                : 'bg-white dark:bg-[#1A1A1E] border border-slate-200 dark:border-slate-800 dark:text-slate-200'
-                                }`}>
-                                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
-                                    {msg.content}
-                                </ReactMarkdown>
+                            <div className={`${msg.role === 'user'
+                                ? 'max-w-[85%] bg-primary text-white shadow-lg shadow-primary/10 rounded-2xl px-5 py-3'
+                                : 'w-full bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm'
+                                } text-[15px]`}>
+                                <div className={msg.role === 'assistant' ? "prose prose-slate dark:prose-invert max-w-none text-[15px] leading-relaxed markdown-content" : ""}>
+                                    <ReactMarkdown 
+                                        remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
+                                        rehypePlugins={[rehypeKatex]}
+                                        components={msg.role === 'assistant' ? {
+                                            p: ({ node, ...props }) => <p className="mb-4 last:mb-0" {...props} />,
+                                            h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-8 mb-4 first:mt-0" {...props} />,
+                                            h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-6 mb-3" {...props} />,
+                                            h3: ({ node, ...props }) => <h3 className="text-lg font-bold mt-4 mb-2" {...props} />,
+                                            ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-1 ml-4" {...props} />,
+                                            ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-1 ml-4" {...props} />,
+                                            li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary/30 pl-4 italic my-4 text-slate-500" {...props} />,
+                                            code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-primary" {...props} />,
+                                            table: ({ node, ...props }) => (
+                                                <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
+                                                    <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
+                                                </div>
+                                            ),
+                                            thead: ({ node, ...props }) => <thead className="bg-slate-50 dark:bg-white/5" {...props} />,
+                                            tbody: ({ node, ...props }) => <tbody className="bg-white dark:bg-transparent divide-y divide-slate-100 dark:divide-slate-800" {...props} />,
+                                            tr: ({ node, ...props }) => <tr {...props} />,
+                                            th: ({ node, ...props }) => <th className="px-5 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider" {...props} />,
+                                            td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
+                                        } : {}}
+                                    >
+                                        {typeof msg.content === 'string' 
+                                            ? msg.content 
+                                            : Array.isArray(msg.content) 
+                                                ? msg.content.map(item => item.text || '').join('')
+                                                : ''
+                                        }
+                                    </ReactMarkdown>
+                                </div>
                             </div>
                         </motion.div>
                     ))}

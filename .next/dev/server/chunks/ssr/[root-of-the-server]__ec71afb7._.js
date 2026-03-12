@@ -109,8 +109,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$providers$2e$t
 ;
 ;
 const metadata = {
-    title: "ShikshyaGPT | Your Personal AI Tutor for Nepali Syllabus",
-    description: "Master your curriculum with our AI-powered learning assistant designed specifically for Nepali students.",
+    title: "ShikshyaGPT | Your Personal AI Tutor Anytime, Anywhere",
+    description: "Master your curriculum with our AI-powered learning assistant designed specifically for Indian students.",
     icons: {
         icon: "/logo.png"
     }

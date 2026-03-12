@@ -31,7 +31,7 @@ import { API_BASE_URL } from "@/lib/constants";
 
 export default function DashboardPage() {
     const [user, setUser] = React.useState<any>(null);
-    const [greeting, setGreeting] = React.useState("Good afternoon");
+    const [greeting, setGreeting] = React.useState("Good Morning");
 
     React.useEffect(() => {
         const storedUser = localStorage.getItem("user");

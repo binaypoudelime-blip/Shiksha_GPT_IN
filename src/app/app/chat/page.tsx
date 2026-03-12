@@ -22,6 +22,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import { useSidebar } from "../../context/SidebarContext";
 import { useVoiceRecording } from "@/hooks/useVoiceRecording";
 import { API_BASE_URL } from "@/lib/constants";
@@ -29,7 +32,7 @@ import { API_BASE_URL } from "@/lib/constants";
 
 interface Message {
     role: "user" | "assistant";
-    content: string;
+    content: string | any[];
     created_at: string;
 }
 
@@ -216,7 +219,14 @@ function ChatContent() {
 
                 <div className="flex-1 flex items-center justify-center overflow-hidden px-4">
                     <h1 className="text-sm font-medium text-slate-600 dark:text-slate-300 truncate">
-                        {messages.length > 0 ? (messages[0].content.length > 50 ? messages[0].content.substring(0, 50) + '...' : messages[0].content) : "New chat"}
+                        {messages.length > 0 ? (() => {
+                            const content = typeof messages[0].content === 'string' 
+                                ? messages[0].content 
+                                : Array.isArray(messages[0].content) 
+                                    ? messages[0].content.map(item => item.text || '').join('')
+                                    : '';
+                            return content.length > 50 ? content.substring(0, 50) + '...' : content;
+                        })() : "New chat"}
                     </h1>
                 </div>
 
@@ -360,7 +370,12 @@ function ChatContent() {
                                 >
                                     {msg.role === 'user' ? (
                                         <div className="max-w-[85%] bg-slate-100 dark:bg-[#1E1E22] px-4 py-2.5 rounded-[20px] text-[15px] leading-relaxed text-slate-900 dark:text-slate-200">
-                                            {msg.content}
+                                            {typeof msg.content === 'string' 
+                                                ? msg.content 
+                                                : Array.isArray(msg.content) 
+                                                    ? msg.content.map(item => item.text || '').join('')
+                                                    : ''
+                                            }
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-3 w-full">
@@ -369,15 +384,31 @@ function ChatContent() {
                                             </div>
                                             <div className="text-[15px] leading-7 text-slate-700 dark:text-slate-200 pl-1 markdown-content">
                                                 <ReactMarkdown
-                                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                                    remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
+                                                    rehypePlugins={[rehypeKatex]}
                                                     components={{
                                                         p: ({ node, ...props }) => <p className="mb-5 last:mb-0" {...props} />,
                                                         ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-5 space-y-2" {...props} />,
                                                         ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-5 space-y-2" {...props} />,
-                                                        li: ({ node, ...props }) => <li className="mb-2 ml-4" {...props} />
+                                                        li: ({ node, ...props }) => <li className="mb-2 ml-4" {...props} />,
+                                                        table: ({ node, ...props }) => (
+                                                            <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
+                                                                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
+                                                            </div>
+                                                        ),
+                                                        thead: ({ node, ...props }) => <thead className="bg-slate-50 dark:bg-white/5" {...props} />,
+                                                        tbody: ({ node, ...props }) => <tbody className="bg-white dark:bg-transparent divide-y divide-slate-100 dark:divide-slate-800" {...props} />,
+                                                        tr: ({ node, ...props }) => <tr {...props} />,
+                                                        th: ({ node, ...props }) => <th className="px-5 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider" {...props} />,
+                                                        td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
                                                     }}
                                                 >
-                                                    {msg.content.replace(/\\n/g, '\n')}
+                                                    {typeof msg.content === 'string' 
+                                                        ? msg.content.replace(/\\n/g, '\n') 
+                                                        : Array.isArray(msg.content)
+                                                            ? msg.content.map(item => (item.text || '').replace(/\\n/g, '\n')).join('')
+                                                            : ''
+                                                    }
                                                 </ReactMarkdown>
                                             </div>
                                         </div>

@@ -6,7 +6,7 @@ __turbopack_context__.s([
     "API_BASE_URL",
     ()=>API_BASE_URL
 ]);
-const API_BASE_URL = "https://shiksha-gpt.com";
+const API_BASE_URL = "https://shiksha-gpt.in";
 }),
 "[project]/src/app/auth/login/page.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";

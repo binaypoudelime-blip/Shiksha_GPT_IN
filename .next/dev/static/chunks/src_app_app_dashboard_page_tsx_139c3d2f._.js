@@ -41,7 +41,7 @@ var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.sign
 function DashboardPage() {
     _s();
     const [user, setUser] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState(null);
-    const [greeting, setGreeting] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState("Good afternoon");
+    const [greeting, setGreeting] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useState("Good Morning");
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].useEffect({
         "DashboardPage.useEffect": ()=>{
             const storedUser = localStorage.getItem("user");
@@ -693,7 +693,7 @@ function DashboardPage() {
         columnNumber: 9
     }, this);
 }
-_s(DashboardPage, "g2fmpJHJf1PWm40omCyUT7zb0h8=");
+_s(DashboardPage, "I6YwCd1C9fx346vNKXG1536uJMM=");
 _c = DashboardPage;
 function StreakWidget() {
     _s1();
