@@ -1,6 +1,0 @@
-{
-  "/app/chat/page": "app/app/chat/page.js",
-  "/app/dashboard/page": "app/app/dashboard/page.js",
-  "/app/quizzes/page": "app/app/quizzes/page.js",
-  "/app/summarizer/page": "app/app/summarizer/page.js"
-}

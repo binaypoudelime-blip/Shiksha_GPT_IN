@@ -15,7 +15,9 @@ import {
     Bot,
     Settings,
     LogOut,
-    MessageSquarePlus
+    MessageSquarePlus,
+    Copy,
+    Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -47,6 +49,7 @@ function ChatContent() {
     const [conversationId, setConversationId] = useState("");
     const [user, setUser] = useState<any>(null);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const router = useRouter();
@@ -199,6 +202,18 @@ function ChatContent() {
         }
     };
 
+    const handleCopy = (text: string, index: number) => {
+        navigator.clipboard.writeText(text);
+        setCopiedIndex(index);
+        setTimeout(() => setCopiedIndex(null), 2000);
+    };
+
+    const getMessageText = (content: string | any[]): string => {
+        if (typeof content === 'string') return content;
+        if (Array.isArray(content)) return content.map(item => item.text || '').join('');
+        return '';
+    };
+
     const userName = user?.name || "N/A";
 
     return (
@@ -220,9 +235,9 @@ function ChatContent() {
                 <div className="flex-1 flex items-center justify-center overflow-hidden px-4">
                     <h1 className="text-sm font-medium text-slate-600 dark:text-slate-300 truncate">
                         {messages.length > 0 ? (() => {
-                            const content = typeof messages[0].content === 'string' 
-                                ? messages[0].content 
-                                : Array.isArray(messages[0].content) 
+                            const content = typeof messages[0].content === 'string'
+                                ? messages[0].content
+                                : Array.isArray(messages[0].content)
                                     ? messages[0].content.map(item => item.text || '').join('')
                                     : '';
                             return content.length > 50 ? content.substring(0, 50) + '...' : content;
@@ -363,58 +378,102 @@ function ChatContent() {
                     ) : (
                         /* Messages List */
                         <div className="space-y-8">
-                            {messages.map((msg, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
-                                >
-                                    {msg.role === 'user' ? (
-                                        <div className="max-w-[85%] bg-slate-100 dark:bg-[#1E1E22] px-4 py-2.5 rounded-[20px] text-[15px] leading-relaxed text-slate-900 dark:text-slate-200">
-                                            {typeof msg.content === 'string' 
-                                                ? msg.content 
-                                                : Array.isArray(msg.content) 
-                                                    ? msg.content.map(item => item.text || '').join('')
-                                                    : ''
-                                            }
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-col gap-3 w-full">
-                                            <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center mt-1">
-                                                <img src="/logo.png" alt="AI" className="w-full h-full object-contain" />
-                                            </div>
-                                            <div className="text-[15px] leading-7 text-slate-700 dark:text-slate-200 pl-1 markdown-content">
-                                                <ReactMarkdown
-                                                    remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
-                                                    rehypePlugins={[rehypeKatex]}
-                                                    components={{
-                                                        p: ({ node, ...props }) => <p className="mb-5 last:mb-0" {...props} />,
-                                                        ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-5 space-y-2" {...props} />,
-                                                        ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-5 space-y-2" {...props} />,
-                                                        li: ({ node, ...props }) => <li className="mb-2 ml-4" {...props} />,
-                                                        table: ({ node, ...props }) => (
-                                                            <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
-                                                                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
-                                                            </div>
-                                                        ),
-                                                        thead: ({ node, ...props }) => <thead className="bg-slate-50 dark:bg-white/5" {...props} />,
-                                                        tbody: ({ node, ...props }) => <tbody className="bg-white dark:bg-transparent divide-y divide-slate-100 dark:divide-slate-800" {...props} />,
-                                                        tr: ({ node, ...props }) => <tr {...props} />,
-                                                        th: ({ node, ...props }) => <th className="px-5 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider" {...props} />,
-                                                        td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
-                                                    }}
+                            {(() => {
+                                const lastAssistantIdx = [...messages].reverse().findIndex(m => m.role === 'assistant');
+                                const actualLastAssistantIdx = lastAssistantIdx !== -1 ? messages.length - 1 - lastAssistantIdx : -1;
+
+                                return messages.map((msg, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                                    >
+                                        {msg.role === 'user' ? (
+                                            <div className="flex items-center gap-2 group max-w-[85%]">
+                                                <button
+                                                    onClick={() => handleCopy(getMessageText(msg.content), idx)}
+                                                    className={`flex items-center gap-1.5 px-3 py-1.5 transition-all text-[12px] font-medium rounded-lg order-first ${copiedIndex === idx
+                                                        ? "opacity-100 bg-slate-100 dark:bg-white/5"
+                                                        : "opacity-0 group-hover:opacity-100 hover:bg-slate-100 dark:hover:bg-white/5 text-slate-400 dark:text-slate-500"
+                                                        }`}
+                                                    title="Copy message"
                                                 >
-                                                    {typeof msg.content === 'string' 
-                                                        ? msg.content.replace(/\\n/g, '\n') 
+                                                    {copiedIndex === idx ? (
+                                                        <>
+                                                            <Check className="w-3.5 h-3.5 text-green-500" />
+                                                            <span className="text-green-500">Copied!</span>
+                                                        </>
+                                                    ) : (
+                                                        <Copy className="w-4 h-4" />
+                                                    )}
+                                                </button>
+                                                <div className="bg-slate-100 dark:bg-[#1E1E22] px-4 py-2.5 rounded-[20px] text-[15px] leading-relaxed text-slate-900 dark:text-slate-200">
+                                                    {typeof msg.content === 'string'
+                                                        ? msg.content
                                                         : Array.isArray(msg.content)
-                                                            ? msg.content.map(item => (item.text || '').replace(/\\n/g, '\n')).join('')
+                                                            ? msg.content.map(item => item.text || '').join('')
                                                             : ''
                                                     }
-                                                </ReactMarkdown>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                        ) : (
+                                            <div className="flex flex-col gap-3 w-full relative">
+                                                <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center mt-1">
+                                                    <img src="/logo.png" alt="AI" className="w-full h-full object-contain" />
+                                                </div>
+                                                <div className="text-[15px] leading-7 text-slate-700 dark:text-slate-200 pl-1 markdown-content">
+                                                    <ReactMarkdown
+                                                        remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
+                                                        rehypePlugins={[rehypeKatex]}
+                                                        components={{
+                                                            p: ({ node, ...props }) => <p className="mb-5 last:mb-0" {...props} />,
+                                                            ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-5 space-y-2" {...props} />,
+                                                            ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-5 space-y-2" {...props} />,
+                                                            li: ({ node, ...props }) => <li className="mb-2 ml-4" {...props} />,
+                                                            table: ({ node, ...props }) => (
+                                                                <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
+                                                                    <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
+                                                                </div>
+                                                            ),
+                                                            thead: ({ node, ...props }) => <thead className="bg-slate-50 dark:bg-white/5" {...props} />,
+                                                            tbody: ({ node, ...props }) => <tbody className="bg-white dark:bg-transparent divide-y divide-slate-100 dark:divide-slate-800" {...props} />,
+                                                            tr: ({ node, ...props }) => <tr {...props} />,
+                                                            th: ({ node, ...props }) => <th className="px-5 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider" {...props} />,
+                                                            td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
+                                                        }}
+                                                    >
+                                                        {typeof msg.content === 'string'
+                                                            ? msg.content.replace(/\\n/g, '\n')
+                                                            : Array.isArray(msg.content)
+                                                                ? msg.content.map(item => (item.text || '').replace(/\\n/g, '\n')).join('')
+                                                                : ''
+                                                        }
+                                                    </ReactMarkdown>
+                                                </div>
+                                                {idx === actualLastAssistantIdx && (
+                                                    <div className="flex items-center mt-2 pl-1">
+                                                        <button
+                                                            onClick={() => handleCopy(getMessageText(msg.content), idx)}
+                                                            className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all text-[12px] font-medium text-slate-500 dark:text-slate-400 group/copy"
+                                                        >
+                                                            {copiedIndex === idx ? (
+                                                                <>
+                                                                    <Check className="w-3.5 h-3.5 text-green-500" />
+                                                                    <span className="text-green-500">Copied!</span>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Copy className="w-3.5 h-3.5 group-hover/copy:text-indigo-500 transition-colors" />
+                                                                    <span>Copy response</span>
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                ));
+                            })()}
                             {isLoading && (
                                 <div className="flex flex-col gap-3">
                                     <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center animate-pulse">
