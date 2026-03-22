@@ -313,7 +313,7 @@ export default function FlashcardsPage() {
                     </button>
                     <div className="flex items-center gap-3">
                         <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest italic">Flip Card</span>
-                        <span className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-widest">
+                        <span className="text-[10px] font-bold text-sky-500 bg-sky-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest">
                             {currentCardIndex + 1} / {activeSet.flashcards.length}
                         </span>
                     </div>
@@ -324,7 +324,7 @@ export default function FlashcardsPage() {
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${((currentCardIndex + 1) / activeSet.flashcards.length) * 100}%` }}
-                        className="h-full bg-primary"
+                        className="h-full bg-sky-500"
                     />
                 </div>
 
@@ -339,14 +339,14 @@ export default function FlashcardsPage() {
                     >
                         {/* Front Side */}
                         <div
-                            className="absolute inset-0 w-full h-full bg-white dark:bg-[#121214] border-2 border-slate-100 dark:border-slate-800 rounded-[32px] p-8 flex flex-col items-center justify-center text-center shadow-lg shadow-primary/5"
+                            className="absolute inset-0 w-full h-full bg-white dark:bg-[#121214] border-2 border-slate-100 dark:border-slate-800 rounded-[32px] p-8 flex flex-col items-center justify-center text-center shadow-lg shadow-sky-500/5"
                             style={{ backfaceVisibility: "hidden" }}
                         >
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Question</span>
                             <h2 className="text-xl md:text-2xl font-bold dark:text-white leading-tight px-4">
                                 {currentCard.question}
                             </h2>
-                            <div className="mt-8 flex items-center gap-2 text-primary/30">
+                            <div className="mt-8 flex items-center gap-2 text-sky-500/30">
                                 <RotateCw className="w-3.5 h-3.5" />
                                 <span className="text-[10px] font-bold uppercase tracking-wider">Tap to Flip</span>
                             </div>
@@ -354,14 +354,14 @@ export default function FlashcardsPage() {
 
                         {/* Back Side */}
                         <div
-                            className="absolute inset-0 w-full h-full bg-primary/5 dark:bg-primary/10 border-2 border-primary/20 dark:border-primary/40 rounded-[32px] p-8 flex flex-col items-center justify-center text-center shadow-lg shadow-primary/10"
+                            className="absolute inset-0 w-full h-full bg-sky-500/5 dark:bg-sky-500/10 border-2 border-sky-500/20 dark:border-sky-500/40 rounded-[32px] p-8 flex flex-col items-center justify-center text-center shadow-lg shadow-sky-500/10"
                             style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                         >
-                            <span className="text-[9px] font-bold text-primary uppercase tracking-widest mb-4 block">Answer</span>
+                            <span className="text-[9px] font-bold text-sky-500 uppercase tracking-widest mb-4 block">Answer</span>
                             <h2 className="text-xl md:text-2xl font-bold dark:text-white leading-tight px-4">
                                 {currentCard.answer || "No answer available"}
                             </h2>
-                            <div className="mt-8 flex items-center gap-2 text-primary/30">
+                            <div className="mt-8 flex items-center gap-2 text-sky-500/30">
                                 <RotateCw className="w-3.5 h-3.5" />
                                 <span className="text-[10px] font-bold uppercase tracking-wider">Tap to Flip</span>
                             </div>
@@ -405,8 +405,8 @@ export default function FlashcardsPage() {
         <div className="max-w-[1200px] mx-auto space-y-8 p-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center">
-                        <SquareStack className="w-6 h-6 text-indigo-500" />
+                    <div className="w-12 h-12 bg-sky-500/10 rounded-2xl flex items-center justify-center">
+                        <SquareStack className="w-6 h-6 text-sky-500" />
                     </div>
                     <div>
                         <h1 className="text-xl font-bold dark:text-white tracking-tight">Flashcards</h1>
@@ -440,13 +440,13 @@ export default function FlashcardsPage() {
 
             {isLoadingFlashcards ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-                    <Loader2 className="w-10 h-10 animate-spin text-primary/40" />
+                    <Loader2 className="w-10 h-10 animate-spin text-sky-500/40" />
                     <p className="text-slate-500 text-sm">Fetching your flashcards...</p>
                 </div>
             ) : flashcardSets.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-white dark:bg-[#121214] border border-dashed border-slate-300 dark:border-slate-800 rounded-[32px]">
-                    <div className="w-16 h-16 bg-primary/5 rounded-full flex items-center justify-center">
-                        <SquareStack className="w-8 h-8 text-primary/40" />
+                    <div className="w-16 h-16 bg-sky-500/5 rounded-full flex items-center justify-center">
+                        <SquareStack className="w-8 h-8 text-sky-500/40" />
                     </div>
                     <div>
                         <h3 className="text-lg font-bold dark:text-white">No flashcards yet</h3>
@@ -474,13 +474,13 @@ export default function FlashcardsPage() {
                                 }}
                                 key={set.id}
                                 onClick={() => handleStartFlashcards(set)}
-                                className={`bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-xl hover:border-primary/30 hover:shadow-md group cursor-pointer overflow-hidden ${viewMode === "grid" ? "p-3" : "p-2.5 flex items-center justify-between"
+                                className={`bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-xl hover:border-sky-500/30 hover:shadow-md group cursor-pointer overflow-hidden ${viewMode === "grid" ? "p-3" : "p-2.5 flex items-center justify-between"
                                     }`}
                             >
                                 <motion.div layout className={`flex items-center gap-2.5 ${viewMode === "grid" ? "mb-2" : ""}`}>
                                     <motion.div
                                         layout
-                                        className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${viewMode === "grid" ? "bg-indigo-500/5 text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white" : "bg-indigo-500/5 text-indigo-500"
+                                        className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${viewMode === "grid" ? "bg-sky-500/5 text-sky-500 group-hover:bg-sky-500 group-hover:text-white" : "bg-sky-500/5 text-sky-500"
                                             }`}>
                                         <SquareStack className="w-4 h-4" />
                                     </motion.div>
@@ -541,7 +541,7 @@ export default function FlashcardsPage() {
                                         <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
                                         <div className="relative">
                                             <select
-                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-sky-500/20 appearance-none dark:text-white text-sm"
                                                 value={selectedSubject?._id || ""}
                                                 onChange={(e) => {
                                                     const sub = subjects.find(s => s._id === e.target.value);
@@ -567,7 +567,7 @@ export default function FlashcardsPage() {
                                         <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Unit / Topic</label>
                                         <div className="relative">
                                             <select
-                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm disabled:opacity-50"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-sky-500/20 appearance-none dark:text-white text-sm disabled:opacity-50"
                                                 value={selectedUnit?._id || ""}
                                                 onChange={(e) => {
                                                     const unit = units.find(u => u._id === e.target.value);
@@ -641,7 +641,7 @@ export default function FlashcardsPage() {
                         className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[200] flex items-center justify-center"
                     >
                         <div className="bg-white dark:bg-[#1A1A1E] p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-slate-200 dark:border-white/10">
-                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                            <Loader2 className="w-8 h-8 animate-spin text-sky-500" />
                             <p className="text-sm font-bold dark:text-white">Loading cards...</p>
                         </div>
                     </motion.div>
