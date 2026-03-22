@@ -369,7 +369,7 @@ export default function SummariesPage() {
                                 {activeSummary.unit} Summary
                             </h2>
                             <div className="flex items-center gap-2 mt-1">
-                                <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full uppercase tracking-widest">
+                                <span className="text-[10px] font-bold text-purple-500 bg-purple-500/10 px-2 py-0.5 rounded-full uppercase tracking-widest">
                                     {activeSummary.subject}
                                 </span>
                             </div>
@@ -397,8 +397,8 @@ export default function SummariesPage() {
                                     ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-1 ml-4" {...props} />,
                                     ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-1 ml-4" {...props} />,
                                     li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-                                    blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary/30 pl-4 italic my-4 text-slate-500" {...props} />,
-                                    code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-primary" {...props} />,
+                                    blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-purple-500/30 pl-4 italic my-4 text-slate-500" {...props} />,
+                                    code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-purple-500" {...props} />,
                                     table: ({ node, ...props }) => (
                                         <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
                                             <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
@@ -420,7 +420,7 @@ export default function SummariesPage() {
                             <div className="mt-8 flex justify-end">
                                 <button
                                     onClick={() => handleSendFollowUp("create a mnemonics of the summary")}
-                                    className="bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 flex items-center gap-2"
+                                    className="bg-purple-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-purple-500/20 hover:scale-[1.02] active:scale-95 flex items-center gap-2"
                                 >
                                     <Sparkles className="w-3 h-3" /> create a mnemonics of the summary
                                 </button>
@@ -437,11 +437,11 @@ export default function SummariesPage() {
                             className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div className={`${msg.role === 'user'
-                                ? 'max-w-[85%] bg-primary text-white shadow-lg shadow-primary/10 rounded-2xl px-5 py-3'
+                                ? 'max-w-[85%] bg-purple-500 text-white shadow-lg shadow-purple-500/10 rounded-2xl px-5 py-3'
                                 : 'w-full bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm'
                                 } text-[15px]`}>
                                 <div className={msg.role === 'assistant' ? "prose prose-slate dark:prose-invert max-w-none text-[15px] leading-relaxed markdown-content" : ""}>
-                                    <ReactMarkdown 
+                                    <ReactMarkdown
                                         remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
                                         rehypePlugins={[rehypeKatex]}
                                         components={msg.role === 'assistant' ? {
@@ -452,8 +452,8 @@ export default function SummariesPage() {
                                             ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-1 ml-4" {...props} />,
                                             ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-1 ml-4" {...props} />,
                                             li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary/30 pl-4 italic my-4 text-slate-500" {...props} />,
-                                            code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-primary" {...props} />,
+                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-purple-500/30 pl-4 italic my-4 text-slate-500" {...props} />,
+                                            code: ({ node, ...props }) => <code className="bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded text-sm font-mono text-purple-500" {...props} />,
                                             table: ({ node, ...props }) => (
                                                 <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
                                                     <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800" {...props} />
@@ -466,9 +466,9 @@ export default function SummariesPage() {
                                             td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
                                         } : {}}
                                     >
-                                        {typeof msg.content === 'string' 
-                                            ? msg.content 
-                                            : Array.isArray(msg.content) 
+                                        {typeof msg.content === 'string'
+                                            ? msg.content
+                                            : Array.isArray(msg.content)
                                                 ? msg.content.map(item => item.text || '').join('')
                                                 : ''
                                         }
@@ -512,7 +512,7 @@ export default function SummariesPage() {
                                 onClick={() => handleSendFollowUp()}
                                 disabled={!followUpQuestion.trim() || isAskingFollowUp}
                                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${followUpQuestion.trim() && !isAskingFollowUp
-                                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                                    ? "bg-purple-500 text-white shadow-lg shadow-purple-500/20"
                                     : "bg-slate-100 dark:bg-white/5 text-slate-300 dark:text-slate-600"
                                     }`}
                             >
@@ -529,8 +529,8 @@ export default function SummariesPage() {
         <div className="max-w-[1200px] mx-auto space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center">
-                        <BookOpen className="w-6 h-6 text-indigo-500" />
+                    <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center">
+                        <BookOpen className="w-6 h-6 text-purple-500" />
                     </div>
                     <div>
                         <h1 className="text-xl font-bold dark:text-white tracking-tight">Summaries</h1>
@@ -564,13 +564,13 @@ export default function SummariesPage() {
 
             {isLoadingSummaries ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-                    <Loader2 className="w-10 h-10 animate-spin text-primary/40" />
+                    <Loader2 className="w-10 h-10 animate-spin text-purple-500/40" />
                     <p className="text-slate-500 text-sm">Fetching your summaries...</p>
                 </div>
             ) : summaries.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-white dark:bg-[#121214] border border-dashed border-slate-300 dark:border-slate-800 rounded-[32px]">
-                    <div className="w-16 h-16 bg-primary/5 rounded-full flex items-center justify-center">
-                        <FileText className="w-8 h-8 text-primary/40" />
+                    <div className="w-16 h-16 bg-purple-500/5 rounded-full flex items-center justify-center">
+                        <FileText className="w-8 h-8 text-purple-500/40" />
                     </div>
                     <div>
                         <h3 className="text-lg font-bold dark:text-white">No summaries yet</h3>
@@ -592,17 +592,17 @@ export default function SummariesPage() {
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 key={summary.id}
                                 onClick={() => handleViewSummary(summary)}
-                                className={`bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-primary/30 hover:shadow-md group cursor-pointer overflow-hidden p-5 transition-all ${viewMode === "list" ? "flex items-center justify-between" : "flex flex-col gap-4"
+                                className={`bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-purple-500/30 hover:shadow-md group cursor-pointer overflow-hidden p-5 transition-all ${viewMode === "list" ? "flex items-center justify-between" : "flex flex-col gap-4"
                                     }`}
                             >
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-500 shrink-0">
+                                    <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-500 shrink-0">
                                         <FileText className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0">
                                         <h3 className="font-bold dark:text-white truncate text-sm">{summary.unit} Summary</h3>
                                         <div className="flex items-center gap-2 mt-0.5">
-                                            <span className="text-[9px] font-extrabold text-primary uppercase tracking-widest">{summary.subject}</span>
+                                            <span className="text-[9px] font-extrabold text-purple-500 uppercase tracking-widest">{summary.subject}</span>
                                             <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
                                             <span className="text-[9px] font-bold text-slate-400 capitalize">{summary.unit}</span>
                                         </div>
@@ -662,7 +662,7 @@ export default function SummariesPage() {
                                         <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
                                         <div className="relative">
                                             <select
-                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500/20 appearance-none dark:text-white text-sm"
                                                 value={selectedSubject?._id || ""}
                                                 onChange={(e) => {
                                                     const sub = subjects.find(s => s._id === e.target.value);
@@ -688,7 +688,7 @@ export default function SummariesPage() {
                                         <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Unit / Topic</label>
                                         <div className="relative">
                                             <select
-                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm disabled:opacity-50"
+                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500/20 appearance-none dark:text-white text-sm disabled:opacity-50"
                                                 value={selectedUnit?._id || ""}
                                                 onChange={(e) => {
                                                     const unit = units.find(u => u._id === e.target.value);
@@ -714,7 +714,7 @@ export default function SummariesPage() {
                                 <button
                                     onClick={handleGenerateSummary}
                                     disabled={!selectedSubject || !selectedUnit || isGenerating}
-                                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold mt-10 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                                    className="w-full bg-purple-500 text-white py-4 rounded-2xl font-bold mt-10 flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
                                 >
                                     {isGenerating ? (
                                         <>
@@ -744,7 +744,7 @@ export default function SummariesPage() {
                         className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[200] flex items-center justify-center"
                     >
                         <div className="bg-white dark:bg-[#1A1A1E] p-6 rounded-2xl shadow-xl flex flex-col items-center gap-4 border border-slate-200 dark:border-white/10">
-                            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                            <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
                             <p className="text-sm font-bold dark:text-white">Loading summary...</p>
                         </div>
                     </motion.div>
