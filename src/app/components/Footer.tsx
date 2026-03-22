@@ -14,7 +14,7 @@ export const Footer = () => {
                             </span>
                         </Link>
                         <p className="text-muted-foreground leading-relaxed mb-6">
-                            Empowering Indian students through intelligent, personalized, and accessible AI tutoring.
+                            Empowering Nepali students through intelligent, personalized, and accessible AI tutoring.
                         </p>
                         <div className="flex gap-4">
                             <Link href="#" className="p-2 bg-slate-50 rounded-lg hover:bg-indigo-50 hover:text-primary transition-all">

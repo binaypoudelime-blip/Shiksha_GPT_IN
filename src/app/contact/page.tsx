@@ -59,9 +59,9 @@ export default function ContactPage() {
                                 <div className="mt-1">
                                     <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-2">Our Location</h3>
                                     <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base">
-                                        Jyothi complex, 4th cross,<br />
-                                        Manjunath layout, Munnekolal,<br />
-                                        Bangalore
+                                        Naxal,<br />
+                                        Kathmandu<br />
+                                        Bagmati Province
                                     </p>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@ export default function ContactPage() {
                                 <div className="mt-1">
                                     <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-2">Phone Number</h3>
                                     <a href="tel:8553230475" className="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-base font-medium">
-                                        8553230475
+                                        9810511777 / 9851242075
                                     </a>
                                 </div>
                             </div>
@@ -84,8 +84,8 @@ export default function ContactPage() {
                                 </div>
                                 <div className="mt-1">
                                     <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-2">Email Address</h3>
-                                    <a href="mailto:shikshagptindia@gmail.com" className="text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors break-all text-base font-medium">
-                                        shikshagptindia@gmail.com
+                                    <a href="mailto:gptshiksha@gmail.com" className="text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors break-all text-base font-medium">
+                                        gptshiksha@gmail.com
                                     </a>
                                 </div>
                             </div>
@@ -166,8 +166,8 @@ export default function ContactPage() {
                                 type="submit"
                                 disabled={status === "loading" || status === "success"}
                                 className={`w-full font-bold py-4 rounded-2xl shadow-xl transition-all text-base tracking-wide mt-4 flex items-center justify-center gap-2 ${status === "success"
-                                        ? "bg-emerald-500 text-white shadow-emerald-200 dark:shadow-none"
-                                        : "bg-primary text-white shadow-indigo-200 dark:shadow-none hover:shadow-2xl hover:shadow-indigo-300 hover:-translate-y-1 active:scale-95"
+                                    ? "bg-emerald-500 text-white shadow-emerald-200 dark:shadow-none"
+                                    : "bg-primary text-white shadow-indigo-200 dark:shadow-none hover:shadow-2xl hover:shadow-indigo-300 hover:-translate-y-1 active:scale-95"
                                     } disabled:opacity-80 disabled:cursor-not-allowed`}
                             >
                                 {status === "loading" ? (

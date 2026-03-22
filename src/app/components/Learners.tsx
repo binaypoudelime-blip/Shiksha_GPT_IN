@@ -12,7 +12,7 @@ const learnersFeature = [
     },
     {
         title: "Instant Doubt Solving",
-        desc: "Get immediate explanations for complex problems in the Indian syllabus.",
+        desc: "Get immediate explanations for complex problems in the Nepali syllabus.",
         icon: Zap,
         color: "bg-purple-50 text-purple-600",
     },

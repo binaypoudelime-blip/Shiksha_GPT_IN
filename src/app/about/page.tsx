@@ -191,23 +191,7 @@ export default function AboutPage() {
                     </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                        {/* Kanhaiya Sharma */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                            className="bg-white dark:bg-slate-900 p-8 rounded-[32px] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center hover:border-primary/50 transition-colors duration-300 group"
-                        >
-                            <div className="w-24 h-24 mb-6 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <Server className="w-10 h-10" />
-                            </div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Kanhaiya Sharma</h3>
-                            <p className="text-primary font-medium mb-4">AI Cloud Engineer</p>
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
-                                <strong>Focus:</strong> Designing the cloud infrastructure and AI models that handle complex data analytics for thousands of concurrent users.
-                            </p>
-                        </motion.div>
+
 
                         {/* Binay Poudel */}
                         <motion.div
@@ -242,6 +226,24 @@ export default function AboutPage() {
                             <p className="text-pink-600 font-medium mb-4">Principal Engineer</p>
                             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
                                 <strong>Focus:</strong> Overseeing the technical architecture to ensure data security, system integrity, and long-term scalability.
+                            </p>
+                        </motion.div>
+
+                        {/* Kanhaiya Sharma */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="bg-white dark:bg-slate-900 p-8 rounded-[32px] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 flex flex-col items-center text-center hover:border-primary/50 transition-colors duration-300 group"
+                        >
+                            <div className="w-24 h-24 mb-6 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                <Server className="w-10 h-10" />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Kanhaiya Sharma</h3>
+                            <p className="text-primary font-medium mb-4">AI Cloud Engineer</p>
+                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+                                <strong>Focus:</strong> Designing the cloud infrastructure and AI models that handle complex data analytics for thousands of concurrent users.
                             </p>
                         </motion.div>
                     </div>

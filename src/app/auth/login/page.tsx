@@ -270,7 +270,7 @@ export default function LoginPage() {
                                 Your personal AI Tutor always with you.
                             </h3>
                             <p className="text-indigo-200/60 text-sm font-medium tracking-wide uppercase">
-                                केंद्रीय माध्यमिक शिक्षा बोर्ड (CBSE) पर आधारित</p>
+                                पाठ्यक्रम विकास केन्द्र (CDC) मा आधारित</p>
                         </div>
 
 

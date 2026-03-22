@@ -25,7 +25,7 @@ const reviews = [
     {
         name: "Sita G.",
         role: "Grade 10 Student",
-        text: "I love how it knows exactly what's in our CBSE curriculum. It's like having a tutor 24/7.",
+        text: "I love how it knows exactly what's in our CDC curriculum. It's like having a tutor 24/7.",
         rating: 5,
     },
     {
