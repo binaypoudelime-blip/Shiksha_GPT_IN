@@ -476,7 +476,7 @@ export default function QuizzesPage() {
         if (!currentQuestion) {
             return (
                 <div className="flex flex-col items-center justify-center py-20">
-                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
                     <p className="mt-4 text-slate-500">Loading question...</p>
                 </div>
             );
@@ -492,10 +492,10 @@ export default function QuizzesPage() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 text-center space-y-6 shadow-2xl shadow-primary/10"
+                        className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 text-center space-y-6 shadow-2xl shadow-orange-500/10"
                     >
-                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                            <HelpCircle className="w-8 h-8 text-primary" />
+                        <div className="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto">
+                            <HelpCircle className="w-8 h-8 text-orange-500" />
                         </div>
                         <div className="space-y-1.5">
                             <h2 className="text-2xl font-bold dark:text-white">Quiz Completed!</h2>
@@ -506,7 +506,7 @@ export default function QuizzesPage() {
 
                         <div className="grid grid-cols-2 gap-3 py-4">
                             <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
-                                <div className="text-2xl font-bold text-primary">{score} / {activeQuiz.questions.length}</div>
+                                <div className="text-2xl font-bold text-orange-500">{score} / {activeQuiz.questions.length}</div>
                                 <div className="text-[10px] text-slate-500 uppercase tracking-widest mt-1 font-bold">Total Score</div>
                             </div>
                             <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5">
@@ -517,7 +517,7 @@ export default function QuizzesPage() {
 
                         <button
                             onClick={resetQuizState}
-                            className="w-full bg-primary text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm"
+                            className="w-full bg-orange-500 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:scale-[1.02] active:scale-95 transition-all text-sm"
                         >
                             Go back to Quizzes
                         </button>
@@ -532,7 +532,7 @@ export default function QuizzesPage() {
                     <button onClick={resetQuizState} className="text-slate-500 hover:text-slate-700 dark:hover:text-white flex items-center gap-2 text-xs font-bold">
                         <X className="w-3.5 h-3.5" /> Exit Quiz
                     </button>
-                    <div className="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full uppercase tracking-widest">
+                    <div className="text-[10px] font-bold text-orange-500 bg-orange-500/10 px-2.5 py-1 rounded-full uppercase tracking-widest">
                         Question {currentQuestionIndex + 1} of {activeQuiz.questions.length}
                     </div>
                 </div>
@@ -541,7 +541,7 @@ export default function QuizzesPage() {
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${((currentQuestionIndex + 1) / activeQuiz.questions.length) * 100}%` }}
-                        className="h-full bg-primary"
+                        className="h-full bg-orange-500"
                     />
                 </div>
 
@@ -582,8 +582,8 @@ export default function QuizzesPage() {
                                     buttonStyles = "border-slate-100 dark:border-white/5 bg-white dark:bg-white/5 dark:text-white opacity-50";
                                 }
                             } else if (isSelected) {
-                                buttonStyles = "border-primary bg-primary/5 text-primary shadow-md shadow-primary/5";
-                                iconStyles = "border-primary bg-primary text-white";
+                                buttonStyles = "border-orange-500 bg-orange-500/5 text-orange-500 shadow-md shadow-orange-500/5";
+                                iconStyles = "border-orange-500 bg-orange-500 text-white";
                             }
 
                             return (
@@ -601,7 +601,7 @@ export default function QuizzesPage() {
                                     </span>
                                     {isAnswerChecked && isCorrect && <CheckCircle2 className="w-4 h-4 text-green-500" />}
                                     {isAnswerChecked && isSelected && !isCorrect && <X className="w-4 h-4 text-red-500" />}
-                                    {!isAnswerChecked && isSelected && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                    {!isAnswerChecked && isSelected && <CheckCircle2 className="w-4 h-4 text-orange-500" />}
                                 </button>
                             );
                         })}
@@ -612,7 +612,7 @@ export default function QuizzesPage() {
                     <button
                         onClick={handleNextStage}
                         disabled={!userAnswers[currentQuestionIndex]}
-                        className="bg-primary text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm disabled:opacity-50 disabled:hover:scale-100"
+                        className="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-orange-500/20 hover:scale-[1.02] active:scale-95 transition-all text-sm disabled:opacity-50 disabled:hover:scale-100"
                     >
                         {!isAnswerChecked ? "Submit Answer" : (isLastQuestion ? "Finish Quiz" : "Next Question")}
                     </button>
@@ -660,13 +660,13 @@ export default function QuizzesPage() {
 
             {isLoadingQuizzes ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
                     <p className="text-slate-500 text-sm">Loading quizzes...</p>
                 </div>
             ) : quizzes.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-white dark:bg-[#121214] border border-dashed border-slate-300 dark:border-slate-800 rounded-[32px]">
-                    <div className="w-16 h-16 bg-primary/5 rounded-full flex items-center justify-center">
-                        <HelpCircle className="w-8 h-8 text-primary/40" />
+                    <div className="w-16 h-16 bg-orange-500/5 rounded-full flex items-center justify-center">
+                        <HelpCircle className="w-8 h-8 text-orange-500/40" />
                     </div>
                     <div>
                         <h3 className="text-lg font-bold dark:text-white">No quizzes yet</h3>
@@ -693,7 +693,7 @@ export default function QuizzesPage() {
                                     opacity: { duration: 0.2 }
                                 }}
                                 key={quiz.id}
-                                className={`bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-primary/30 hover:shadow-xl group overflow-hidden transition-all duration-300 ${viewMode === "grid" ? "p-4" : "p-3 flex items-center justify-between"
+                                className={`bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-orange-500/30 hover:shadow-xl group overflow-hidden transition-all duration-300 ${viewMode === "grid" ? "p-4" : "p-3 flex items-center justify-between"
                                     }`}
                             >
                                 <div className={viewMode === "grid" ? "space-y-4" : "flex items-center gap-6 flex-1 pr-6"}>
@@ -701,7 +701,7 @@ export default function QuizzesPage() {
                                         <motion.div
                                             layout
                                             layoutId={`quiz-icon-${quiz.id}`}
-                                            className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors shadow-sm ${viewMode === "grid" ? "bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white" : "bg-primary/5 text-primary"
+                                            className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-colors shadow-sm ${viewMode === "grid" ? "bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white" : "bg-orange-500/10 text-orange-500"
                                                 }`}>
                                             <HelpCircle className="w-5 h-5" />
                                         </motion.div>
@@ -736,7 +736,7 @@ export default function QuizzesPage() {
                                         </span>
                                         {loadingQuizId === quiz.id && (
                                             <span className="flex items-center gap-1.5 whitespace-nowrap border-l border-slate-100 dark:border-slate-800 pl-4">
-                                                <Loader2 className="w-3 h-3 animate-spin text-primary" />
+                                                <Loader2 className="w-3 h-3 animate-spin text-orange-500" />
                                             </span>
                                         )}
                                     </motion.div>
@@ -751,7 +751,7 @@ export default function QuizzesPage() {
                                             e.stopPropagation();
                                             handleStartQuiz(quiz);
                                         }}
-                                        className={`bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all duration-300 py-2 px-4 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2 shadow-sm whitespace-nowrap`}
+                                        className={`bg-slate-50 dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-orange-500 hover:text-white transition-all duration-300 py-2 px-4 rounded-xl text-[11px] font-bold flex items-center justify-center gap-2 shadow-sm whitespace-nowrap`}
                                     >
                                         <Play className="w-3 h-3 fill-current" /> Play Quiz
                                     </button>
@@ -766,7 +766,7 @@ export default function QuizzesPage() {
                 <div className="flex justify-center pt-8">
                     <button
                         onClick={handleLoadMore}
-                        className="px-8 py-3 bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold dark:text-white hover:border-primary/30 transition-all flex items-center gap-2"
+                        className="px-8 py-3 bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold dark:text-white hover:border-orange-500/30 transition-all flex items-center gap-2"
                     >
                         Load More Quizzes
                     </button>

@@ -38,7 +38,8 @@ import {
     History as HistoryIcon,
     HelpCircle,
     ListChecks,
-    Loader2
+    Loader2,
+    Map
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
@@ -50,9 +51,10 @@ const navItems = [
     // { icon: Calendar, label: "Calendar", href: "/app/calendar", color: "text-rose-500", bgColor: "bg-rose-500/10" },
     { icon: SquareStack, label: "Flashcards", href: "/app/flashcards", color: "text-sky-500", bgColor: "bg-sky-500/10" },
     { icon: HelpCircle, label: "Quizzes", href: "/app/quizzes", color: "text-amber-500", bgColor: "bg-amber-500/10" },
-    { icon: BookOpen, label: "Summarizer", href: "/app/summarizer", color: "text-emerald-500", bgColor: "bg-emerald-500/10" },
+    { icon: BookOpen, label: "Summarizer", href: "/app/summarizer", color: "text-purple-500", bgColor: "bg-purple-500/10" },
     //{ icon: GraduationCap, label: "Tutor Me", href: "/app/tutor", color: "text-violet-500", bgColor: "bg-violet-500/10" },
     { icon: ListChecks, label: "Practice Test", href: "/app/practice-test", color: "text-pink-500", bgColor: "bg-pink-500/10" },
+    { icon: Map, label: "Roadmap", href: "/app/roadmap", color: "text-emerald-500", bgColor: "bg-emerald-500/10" },
     { icon: Film, label: "Explainers", href: "/app/explainers", color: "text-orange-500", bgColor: "bg-orange-500/10" },
     { icon: FileText, label: "Notes & Resources", href: "/app/notes", color: "text-cyan-500", bgColor: "bg-cyan-500/10" },
     { icon: MessageSquare, label: "Shiksha.E (Chat)", href: "/app/chat", color: "text-fuchsia-500", bgColor: "bg-fuchsia-500/10" },
@@ -155,6 +157,8 @@ function NavItem({ item, isSidebarOpen, pathname, onClick }: { item: any, isSide
         }
     };
 
+    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+
     return (
         <>
             <Link
@@ -163,19 +167,19 @@ function NavItem({ item, isSidebarOpen, pathname, onClick }: { item: any, isSide
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={() => setShowTooltip(false)}
                 onClick={onClick}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all group relative ${pathname === item.href
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all group relative ${isActive
                     ? `${item.bgColor}`
                     : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                     }`}
             >
                 {Icon && (
-                    <Icon className={`w-4 h-4 shrink-0 transition-all duration-300 ${item.color} ${pathname === item.href
+                    <Icon className={`w-4 h-4 shrink-0 transition-all duration-300 ${item.color} ${isActive
                         ? "scale-110 opacity-100"
                         : "opacity-60 group-hover:opacity-100 group-hover:scale-110"
                         }`} />
                 )}
                 {isSidebarOpen && (
-                    <span className={`text-[13px] font-semibold leading-none truncate transition-all duration-300 ${pathname === item.href ? item.color : "text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
+                    <span className={`text-[13px] font-semibold leading-none truncate transition-all duration-300 ${isActive ? item.color : "text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
                         }`}>
                         {item.label}
                     </span>
