@@ -39,7 +39,9 @@ import {
     HelpCircle,
     ListChecks,
     Loader2,
-    Map
+    Map,
+    Languages,
+    Check
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
@@ -262,9 +264,20 @@ function AppContent({ children }: { children: React.ReactNode }) {
     const [conversations, setConversations] = useState<any[]>([]);
     const [streak, setStreak] = useState<number>(0);
     const [isStreakHovered, setIsStreakHovered] = useState(false);
+    const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+    const [currentLang, setCurrentLang] = useState("en");
     const pathname = usePathname();
     const router = useRouter();
     const { theme, setTheme } = useTheme();
+
+    const languages = [
+        { code: 'en', label: 'English (US)' },
+        { code: 'es', label: 'Español (Spain)' },
+        { code: 'ja', label: '日本語 (Japanese)' },
+        { code: 'hi', label: 'हिन्दी (Hindi)' },
+        { code: 'ne', label: 'नेपाली (Nepali)' },
+        { code: 'zh-CN', label: '中文 (Mandarin)' },
+    ];
 
     const fetchConversations = async (userId: string) => {
         try {
@@ -314,7 +327,71 @@ function AppContent({ children }: { children: React.ReactNode }) {
                 console.error("Failed to parse user from localStorage", e);
             }
         }
+
+        // Initialize Google Translate
+        const loadGoogleTranslate = () => {
+            if (document.getElementById("google-translate-script")) return;
+            const script = document.createElement("script");
+            script.id = "google-translate-script";
+            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.async = true;
+            document.body.appendChild(script);
+
+            (window as any).googleTranslateElementInit = () => {
+                new (window as any).google.translate.TranslateElement(
+                    {
+                        pageLanguage: 'en',
+                        includedLanguages: 'en,es,ja,hi,ne,zh-CN',
+                        autoDisplay: false,
+                    },
+                    'google_translate_element'
+                );
+            };
+        };
+
+        loadGoogleTranslate();
+
+        // Get current language from cookie
+        const match = document.cookie.match(/(?:^|;)\s*googtrans=([^;]*)/);
+        if (match) {
+            const lang = match[1].split('/').pop();
+            if (lang) setCurrentLang(lang);
+        }
+
+        // Protect Katex math elements and code blocks from Google Translate globally
+        const observeMath = () => {
+            const addNoTranslate = () => {
+                document.querySelectorAll('.katex, code').forEach(el => {
+                    if (!el.classList.contains('notranslate')) {
+                        el.classList.add('notranslate');
+                        el.setAttribute('translate', 'no');
+                    }
+                });
+            };
+            
+            addNoTranslate();
+            const observer = new MutationObserver(addNoTranslate);
+            observer.observe(document.body, { childList: true, subtree: true });
+            return observer;
+        };
+
+        const mathObserver = observeMath();
+
+        return () => {
+            mathObserver.disconnect();
+        };
+
     }, [pathname, refreshTrigger]);
+
+    const switchLanguage = (langCode: string) => {
+        // Set cookie and reload to apply translation
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (365 * 24 * 60 * 60 * 1000));
+        document.cookie = `googtrans=/auto/${langCode}; expires=${expires.toUTCString()}; path=/`;
+        document.cookie = `googtrans=/auto/${langCode}; expires=${expires.toUTCString()}; path=/; domain=${window.location.hostname}`;
+        setCurrentLang(langCode);
+        window.location.reload();
+    };
 
     const userInitial = user?.name
         ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase()
@@ -502,6 +579,52 @@ function AppContent({ children }: { children: React.ReactNode }) {
                             </AnimatePresence>
                         </motion.div>
 
+                        {/* Language Translator Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                                className="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors min-w-[40px] flex items-center justify-center relative group/lang"
+                            >
+                                <Languages className="w-5 h-5" />
+
+                                {/* Tooltip */}
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover/lang:opacity-100 pointer-events-none transition-all duration-200 translate-y-2 group-hover/lang:translate-y-0 z-50">
+                                    <div className="bg-slate-900 dark:bg-slate-800 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-xl whitespace-nowrap">
+                                        Translate
+                                    </div>
+                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 dark:bg-slate-800 rotate-45"></div>
+                                </div>
+                            </button>
+
+                            <AnimatePresence>
+                                {isLangMenuOpen && (
+                                    <>
+                                        <div className="fixed inset-0 z-40" onClick={() => setIsLangMenuOpen(false)}></div>
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#1A1A1E] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                                        >
+                                            <div className="p-2">
+                                                <p className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Translate</p>
+                                                {languages.map((lang) => (
+                                                    <button
+                                                        key={lang.code}
+                                                        onClick={() => switchLanguage(lang.code)}
+                                                        className={`w-full text-left px-3 py-2 text-sm rounded-xl transition-colors flex items-center justify-between ${currentLang === lang.code ? 'bg-primary/10 text-primary font-bold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                                                    >
+                                                        {lang.label}
+                                                        {currentLang === lang.code && <Check className="w-4 h-4" />}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    </>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
                         <div className="relative group/theme">
                             <button
                                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -590,6 +713,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
 
                 {/* Page Content */}
                 <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-white dark:bg-[#0A0A0B]">
+                    <div id="google_translate_element" className="hidden"></div>
                     {children}
                 </div>
             </main>

@@ -17,7 +17,9 @@ import {
     LogOut,
     MessageSquarePlus,
     Copy,
-    Check
+    Check,
+    Volume2,
+    Square
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -50,6 +52,8 @@ function ChatContent() {
     const [user, setUser] = useState<any>(null);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+    const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+    const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const router = useRouter();
@@ -207,6 +211,49 @@ function ChatContent() {
         setCopiedIndex(index);
         setTimeout(() => setCopiedIndex(null), 2000);
     };
+
+    const handleSpeak = (text: string, index: number) => {
+        if (!synth) return;
+
+        if (playingIndex === index) {
+            synth.cancel();
+            setPlayingIndex(null);
+            return;
+        }
+
+        synth.cancel();
+
+        const cleanText = text
+            .replace(/```[\s\S]*?```/g, '') // Remove code blocks entirely
+            .replace(/`[^`]*`/g, '') // Remove inline code
+            .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
+            .replace(/\[([^\]]+)\]\(.*?\)/g, '$1') // Extract text from links
+            .replace(/[#*~_>]/g, '') // Remove special markdown characters
+            .replace(/[-]{3,}/g, '') // Remove horizontal rules
+            .replace(/\s+/g, ' ') // Clean up extra whitespace/newlines
+            .trim();
+
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+
+        utterance.onend = () => {
+            setPlayingIndex(null);
+        };
+
+        utterance.onerror = () => {
+            setPlayingIndex(null);
+        };
+
+        setPlayingIndex(index);
+        synth.speak(utterance);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (synth) {
+                synth.cancel();
+            }
+        };
+    }, []);
 
     const getMessageText = (content: string | any[]): string => {
         if (typeof content === 'string') return content;
@@ -450,7 +497,7 @@ function ChatContent() {
                                                     </ReactMarkdown>
                                                 </div>
                                                 {idx === actualLastAssistantIdx && (
-                                                    <div className="flex items-center mt-2 pl-1">
+                                                    <div className="flex items-center gap-2 mt-2 pl-1">
                                                         <button
                                                             onClick={() => handleCopy(getMessageText(msg.content), idx)}
                                                             className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all text-[12px] font-medium text-slate-500 dark:text-slate-400 group/copy"
@@ -464,6 +511,23 @@ function ChatContent() {
                                                                 <>
                                                                     <Copy className="w-3.5 h-3.5 group-hover/copy:text-indigo-500 transition-colors" />
                                                                     <span>Copy response</span>
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleSpeak(getMessageText(msg.content), idx)}
+                                                            className={`flex items-center gap-1.5 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-all text-[12px] font-medium group/speak ${playingIndex === idx ? 'text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10' : 'text-slate-500 dark:text-slate-400'}`}
+                                                            title={playingIndex === idx ? "Stop speaking" : "Speak response"}
+                                                        >
+                                                            {playingIndex === idx ? (
+                                                                <>
+                                                                    <Square className="w-3.5 h-3.5 fill-current" />
+                                                                    <span>Stop</span>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <Volume2 className="w-3.5 h-3.5 group-hover/speak:text-indigo-500 transition-colors" />
+                                                                    <span>Listen</span>
                                                                 </>
                                                             )}
                                                         </button>
