@@ -79,15 +79,7 @@ export default function DashboardPage() {
 
             {/* Quick Access Sets */}
             <div className="flex flex-wrap gap-4">
-                <div className="bg-primary text-white px-6 py-3 rounded-2xl flex items-center gap-3 shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform">
-                    <div className="p-1.5 bg-white/20 rounded-lg">
-                        <Play className="w-3.5 h-3.5 fill-current" />
-                    </div>
-                    <div className="p-1.5 bg-white/20 rounded-lg">
-                        <SearchCheck className="w-4 h-4" />
-                    </div>
-                    <span className="font-bold text-sm">AI Digest</span>
-                </div>
+                <BackpackProgress />
 
                 <Link href="/app/notes?upload=true" className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 px-6 py-3 rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                     <div className="p-1.5 border border-dashed border-slate-400 dark:border-slate-600 rounded-lg group-hover:bg-primary/10 group-hover:border-primary transition-all">
@@ -661,3 +653,113 @@ function LessonItem({ title, progress }: { title: string, progress: number }) {
     );
 }
 
+
+function BackpackProgress() {
+    const [overallProgress, setOverallProgress] = React.useState(0);
+
+    React.useEffect(() => {
+        const fetchProgress = async () => {
+            try {
+                const token = localStorage.getItem("access_token");
+                const [progressResponse] = await Promise.all([
+                    fetch(`${API_BASE_URL}/api/roadmap/overall`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    })
+                ]);
+
+                if (progressResponse.ok) {
+                    const progressData = await progressResponse.json();
+                    setOverallProgress(progressData.progress_percent || 0);
+                }
+            } catch (error) {
+                console.error("Failed to fetch progress", error);
+            }
+        };
+
+        fetchProgress();
+    }, []);
+
+    const fillY = overallProgress === 0 ? 130 : (overallProgress === 100 ? 18 : 112 - (overallProgress / 100) * 94);
+
+    return (
+        <Link href="/app/roadmap" className="group relative pr-4 flex items-center justify-center">
+            <style>{`
+                @keyframes wave-slide-svg-dashboard {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-100px); }
+                }
+                .animate-wave-slide-svg {
+                    animation: wave-slide-svg-dashboard 2s linear infinite;
+                }
+                .animate-wave-slide-svg-slow {
+                    animation: wave-slide-svg-dashboard 3s linear infinite;
+                }
+            `}</style>
+
+            <div className="text-emerald-500 w-[54px] h-[54px] relative cursor-pointer hover:scale-105 transition-transform duration-300">
+                <svg viewBox="-4 -4 108 124" className="w-full h-full overflow-visible drop-shadow-sm">
+                    <defs>
+                        <clipPath id="backpack-clip-dashboard">
+                            <path d="
+                                M 2 62 C 2 56 4 54 8 54 H 92 C 96 54 98 56 98 62 V 102 C 98 108 96 110 92 110 H 8 Z
+                                M 16 32 C 16 22 24 18 34 18 H 66 C 76 18 84 22 84 32 V 102 C 84 107.5 79.5 112 74 112 H 26 C 20.5 112 16 107.5 16 102 Z
+                            " />
+                        </clipPath>
+                    </defs>
+
+                    {/* Fluid */}
+                    <g clipPath="url(#backpack-clip-dashboard)" className="text-pink-500">
+                        {overallProgress > 0 && (
+                            <>
+                                <rect x="0" y={fillY} width="100" height="130" fill="currentColor" fillOpacity="0.25" />
+                                {overallProgress < 100 && (
+                                    <>
+                                        {/* Back wave */}
+                                        <g className="animate-wave-slide-svg-slow">
+                                            <path
+                                                fill="currentColor"
+                                                fillOpacity="0.3"
+                                                d={`M 0 ${fillY} Q 25 ${fillY + 5}, 50 ${fillY} T 100 ${fillY} T 150 ${fillY} T 200 ${fillY} T 250 ${fillY} T 300 ${fillY} L 300 130 L 0 130 Z`}
+                                            />
+                                        </g>
+                                        {/* Front wave */}
+                                        <g className="animate-wave-slide-svg">
+                                            <path
+                                                fill="currentColor"
+                                                fillOpacity="0.6"
+                                                d={`M 0 ${fillY} Q 25 ${fillY - 4}, 50 ${fillY} T 100 ${fillY} T 150 ${fillY} T 200 ${fillY} T 250 ${fillY} T 300 ${fillY} L 300 130 L 0 130 Z`}
+                                            />
+                                        </g>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </g>
+
+                    {/* Icon Outline */}
+                    <g fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M 36 24 V 10 C 36 4 42 2 50 2 C 58 2 64 4 64 10 V 24" />
+                        <path d="M 16 54 H 8 C 4 54 2 56 2 62 V 102 C 2 108 4 110 8 110 H 16" />
+                        <path d="M 84 54 H 92 C 96 54 98 56 98 62 V 102 C 98 108 96 110 92 110 H 84" />
+                        <path d="M 16 40 V 102 C 16 107.5 20.5 112 26 112 H 74 C 79.5 112 84 107.5 84 102 V 40" />
+                        <path d="M 16 40 C 16 54 30 58 50 58 C 70 58 84 54 84 40 V 32 C 84 22 76 18 66 18 H 34 C 24 18 16 22 16 32 Z" />
+                        <path d="M 44 58 L 46 68 H 54 L 56 58" />
+                        <rect x="28" y="68" width="44" height="22" rx="6" />
+                        <path d="M 34 76 H 66" />
+                        <path d="M 62 76 V 81" />
+                    </g>
+                </svg>
+            </div>
+
+            {/* Hover Tooltip */}
+            <div className="absolute top-1/2 left-full -translate-y-1/2 ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-[100]">
+                <div className="flex items-center">
+                    <div className="w-2 h-2 bg-slate-800 dark:bg-slate-700 rotate-45 -mr-1.5 z-0 relative"></div>
+                    <div className="bg-slate-800 dark:bg-slate-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap relative z-10">
+                        Overall Progress: <span className="text-pink-400">{overallProgress}%</span>
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+}
