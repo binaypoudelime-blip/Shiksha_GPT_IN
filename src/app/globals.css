@@ -202,3 +202,19 @@
 .markdown-content blockquote {
     @apply border-l-4 border-indigo-500 pl-4 py-1 italic mb-4 text-slate-600 dark:text-slate-400;
 }
+
+/* Hide Google Translate Banner and Reset Body Position */
+.skiptranslate > iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt, 
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+body, html {
+    top: 0px !important;
+    margin-top: 0px !important;
+}
