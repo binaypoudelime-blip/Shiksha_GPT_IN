@@ -41,16 +41,18 @@ import {
     Loader2,
     Map,
     Languages,
-    Check
+    Check,
+    Wand2
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import { API_BASE_URL } from "@/lib/constants";
-
+import SupportDropdown from "./support/SupportDropdown";
 
 const navItems = [
     // { icon: Calendar, label: "Calendar", href: "/app/calendar", color: "text-rose-500", bgColor: "bg-rose-500/10" },
+    { icon: Wand2, label: "Playground", href: "/app/playground", color: "text-indigo-500", bgColor: "bg-indigo-500/10" },
     { icon: SquareStack, label: "Flashcards", href: "/app/flashcards", color: "text-sky-500", bgColor: "bg-sky-500/10" },
     { icon: HelpCircle, label: "Quizzes", href: "/app/quizzes", color: "text-amber-500", bgColor: "bg-amber-500/10" },
     { icon: BookOpen, label: "Summarizer", href: "/app/summarizer", color: "text-purple-500", bgColor: "bg-purple-500/10" },
@@ -368,7 +370,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
                     }
                 });
             };
-            
+
             addNoTranslate();
             const observer = new MutationObserver(addNoTranslate);
             observer.observe(document.body, { childList: true, subtree: true });
@@ -501,7 +503,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
                         </div> */}
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
                         <motion.div
                             onMouseEnter={() => setIsStreakHovered(true)}
                             onMouseLeave={() => setIsStreakHovered(false)}
@@ -583,7 +585,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
                         <div className="relative">
                             <button
                                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                                className="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors min-w-[40px] flex items-center justify-center relative group/lang"
+                                className="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors flex items-center justify-center relative group/lang"
                             >
                                 <Languages className="w-5 h-5" />
 
@@ -628,7 +630,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
                         <div className="relative group/theme">
                             <button
                                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                                className="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors min-w-[40px] flex items-center justify-center"
+                                className="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors flex items-center justify-center"
                             >
                                 {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
                             </button>
@@ -641,6 +643,8 @@ function AppContent({ children }: { children: React.ReactNode }) {
                                 <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 dark:bg-slate-800 rotate-45"></div>
                             </div>
                         </div>
+
+                        <SupportDropdown />
 
                         {/* <button className="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors relative">
                             <Bell className="w-5 h-5" />
