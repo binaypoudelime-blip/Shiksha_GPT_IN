@@ -67,7 +67,7 @@ export default function SupportDropdown() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-2 w-[400px] max-h-[85vh] overflow-y-auto bg-white dark:bg-[#1A1A1E] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col"
+                        className="absolute -right-[60px] md:right-0 mt-2 w-[calc(100vw-32px)] md:w-[400px] max-h-[85vh] overflow-y-auto bg-white dark:bg-[#1A1A1E] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col"
                     >
                         {/* Header Tabs */}
                         <div className="flex border-b border-slate-200 dark:border-slate-800 sticky top-0 bg-white dark:bg-[#1A1A1E] z-10 pt-2 px-2 gap-1 rounded-t-2xl">

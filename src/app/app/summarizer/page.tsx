@@ -383,7 +383,7 @@ export default function SummariesPage() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm"
+                        className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-4 md:p-8 shadow-sm"
                     >
                         <div className="prose prose-slate dark:prose-invert max-w-none text-[15px] leading-relaxed markdown-content">
                             <ReactMarkdown
@@ -438,7 +438,7 @@ export default function SummariesPage() {
                         >
                             <div className={`${msg.role === 'user'
                                 ? 'max-w-[85%] bg-purple-500 text-white shadow-lg shadow-purple-500/10 rounded-2xl px-5 py-3'
-                                : 'w-full bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-sm'
+                                : 'w-full bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-3xl p-4 md:p-8 shadow-sm'
                                 } text-[15px]`}>
                                 <div className={msg.role === 'assistant' ? "prose prose-slate dark:prose-invert max-w-none text-[15px] leading-relaxed markdown-content" : ""}>
                                     <ReactMarkdown
@@ -642,7 +642,7 @@ export default function SummariesPage() {
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
                             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-[500px] bg-white dark:bg-[#1A1A1E] rounded-[32px] shadow-2xl z-[101] overflow-hidden border border-slate-200 dark:border-white/10"
                         >
-                            <div className="p-8">
+                            <div className="p-6 md:p-8">
                                 <div className="flex items-center justify-between mb-8">
                                     <div>
                                         <h2 className="text-2xl font-bold dark:text-white">Generate Summary</h2>

@@ -317,7 +317,7 @@ function ChatContent() {
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
                             className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-white/10 hover:opacity-80 transition-opacity"
                         >
-                            <div className="flex flex-col items-end">
+                            <div className="hidden md:flex flex-col items-end">
                                 <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight">
                                     {userName}
                                 </span>
@@ -424,7 +424,7 @@ function ChatContent() {
                         </motion.div>
                     ) : (
                         /* Messages List */
-                        <div className="space-y-8">
+                        <div className="space-y-4 md:space-y-8">
                             {(() => {
                                 const lastAssistantIdx = [...messages].reverse().findIndex(m => m.role === 'assistant');
                                 const actualLastAssistantIdx = lastAssistantIdx !== -1 ? messages.length - 1 - lastAssistantIdx : -1;
@@ -453,7 +453,7 @@ function ChatContent() {
                                                         <Copy className="w-4 h-4" />
                                                     )}
                                                 </button>
-                                                <div className="bg-slate-100 dark:bg-[#1E1E22] px-4 py-2.5 rounded-[20px] text-[15px] leading-relaxed text-slate-900 dark:text-slate-200">
+                                                <div className="bg-slate-100 dark:bg-[#1E1E22] px-4 py-2.5 rounded-[20px] text-base md:text-[15px] leading-relaxed text-slate-900 dark:text-slate-200">
                                                     {typeof msg.content === 'string'
                                                         ? msg.content
                                                         : Array.isArray(msg.content)
@@ -463,18 +463,21 @@ function ChatContent() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="flex flex-col gap-3 w-full relative">
+                                            <div className="flex flex-col gap-1 md:gap-3 w-full relative">
                                                 <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center mt-1">
                                                     <img src="/logo.png" alt="AI" className="w-full h-full object-contain" />
                                                 </div>
-                                                <div className="text-[15px] leading-7 text-slate-700 dark:text-slate-200 pl-1 markdown-content">
+                                                <div className="text-base md:text-[15px] leading-7 text-slate-700 dark:text-slate-200 pl-1 markdown-content">
                                                     <ReactMarkdown
                                                         remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
                                                         rehypePlugins={[rehypeKatex]}
                                                         components={{
-                                                            p: ({ node, ...props }) => <p className="mb-5 last:mb-0" {...props} />,
-                                                            ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-5 space-y-2" {...props} />,
-                                                            ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-5 space-y-2" {...props} />,
+                                                            p: ({ node, ...props }) => <p className="mb-4 md:mb-5 last:mb-0 first:mt-0" {...props} />,
+                                                            h1: ({ node, ...props }) => <h1 className="text-xl md:text-2xl font-bold mt-6 mb-3 first:mt-0" {...props} />,
+                                                            h2: ({ node, ...props }) => <h2 className="text-lg md:text-xl font-bold mt-5 mb-2 first:mt-0" {...props} />,
+                                                            h3: ({ node, ...props }) => <h3 className="text-base md:text-lg font-bold mt-4 mb-2 first:mt-0" {...props} />,
+                                                            ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 md:mb-5 space-y-2 first:mt-0" {...props} />,
+                                                            ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 md:mb-5 space-y-2 first:mt-0" {...props} />,
                                                             li: ({ node, ...props }) => <li className="mb-2 ml-4" {...props} />,
                                                             table: ({ node, ...props }) => (
                                                                 <div className="overflow-x-auto my-6 rounded-xl border border-slate-200 dark:border-slate-800">
