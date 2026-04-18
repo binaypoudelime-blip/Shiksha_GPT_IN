@@ -127,7 +127,7 @@ function HistoryItem({ conv, urlId, onClick }: { conv: any, urlId: string | null
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={() => setShowTooltip(false)}
                 onClick={onClick}
-                className={`block px-2 py-1.5 rounded-md text-[11px] transition-colors truncate font-medium ${urlId === conv._id
+                className={`block px-2 py-2 lg:py-1.5 rounded-md text-[13px] lg:text-[11px] transition-colors truncate font-medium ${urlId === conv._id
                     ? "bg-primary/10 text-primary"
                     : "text-slate-600 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-primary"
                     }`}
@@ -183,7 +183,7 @@ function NavItem({ item, isSidebarOpen, pathname, onClick }: { item: any, isSide
                         }`} />
                 )}
                 {isSidebarOpen && (
-                    <span className={`text-[13px] font-semibold leading-none truncate transition-all duration-300 ${isActive ? item.color : "text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
+                    <span className={`text-[15px] lg:text-[13px] font-semibold leading-none truncate transition-all duration-300 ${isActive ? item.color : "text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white"
                         }`}>
                         {item.label}
                     </span>
@@ -229,9 +229,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 function HistorySection({ urlId, conversations, toggleSidebar }: { urlId: string | null, conversations: any[], toggleSidebar: () => void }) {
     return (
         <div className="mt-2 mb-4 -mr-2 space-y-1">
-            <div className="flex items-center gap-2 px-4 py-1 mb-1">
-                <HistoryIcon className="w-3 h-3 text-slate-600 dark:text-slate-400" />
-                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider">History</span>
+            <div className="flex items-center gap-2 px-4 py-1.5 lg:py-1 mb-1">
+                <HistoryIcon className="w-4 h-4 lg:w-3 lg:h-3 text-slate-600 dark:text-slate-400" />
+                <span className="text-[12px] lg:text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider">History</span>
             </div>
             <div className="max-h-[35vh] overflow-y-auto space-y-0.5">
                 {conversations.length > 0 ? (
@@ -415,7 +415,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={toggleSidebar}
-                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[45] lg:hidden"
                     />
                 )}
             </AnimatePresence>
