@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, BookOpen, MessageSquare, BrainCircuit, FileText, Lightbulb, Layers, Calendar, Presentation } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +14,14 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isAppWebView, setIsAppWebView] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+        if (typeof window !== "undefined" && (window as any).ReactNativeWebView) {
+            setIsAppWebView(true);
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,13 +64,15 @@ export default function LoginPage() {
         <div className="flex h-screen bg-white dark:bg-slate-950 selection:bg-indigo-100 selection:text-primary overflow-hidden transition-colors duration-300">
             {/* Left Side: Login Form */}
             <div className="w-full lg:w-1/2 flex flex-col p-6 md:p-10 lg:p-12 relative overflow-y-auto bg-white dark:bg-slate-950">
-                <Link
-                    href="/"
-                    className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-primary transition-colors group z-20"
-                >
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    <span className="text-sm font-medium">Back to Home</span>
-                </Link>
+                {!isAppWebView && (
+                    <Link
+                        href="/"
+                        className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-primary transition-colors group z-20"
+                    >
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                        <span className="text-sm font-medium">Back to Home</span>
+                    </Link>
+                )}
 
                 <div className="max-w-md w-full mx-auto my-auto flex flex-col gap-6 lg:gap-8">
                     {/* Header */}

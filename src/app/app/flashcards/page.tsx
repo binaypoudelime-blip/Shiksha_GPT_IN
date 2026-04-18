@@ -71,6 +71,8 @@ export default function FlashcardsPage() {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false);
     const [viewedCards, setViewedCards] = useState<Set<number>>(new Set());
+    const [confidenceScores, setConfidenceScores] = useState<Record<number, 'confident' | 'needs_work'>>({});
+    const [showSummary, setShowSummary] = useState(false);
     const [isFetchingDetails, setIsFetchingDetails] = useState(false);
     const [isLoadingFlashcards, setIsLoadingFlashcards] = useState(false);
 
@@ -206,6 +208,8 @@ export default function FlashcardsPage() {
                     setCurrentCardIndex(0);
                     setIsFlipped(false);
                     setViewedCards(new Set([0]));
+                    setConfidenceScores({});
+                    setShowSummary(false);
                 }
             } catch (error) {
                 console.error("Failed to fetch flashcard details", error);
@@ -217,6 +221,8 @@ export default function FlashcardsPage() {
             setCurrentCardIndex(0);
             setIsFlipped(false);
             setViewedCards(new Set([0]));
+            setConfidenceScores({});
+            setShowSummary(false);
         }
     };
 
@@ -240,6 +246,8 @@ export default function FlashcardsPage() {
         setCurrentCardIndex(0);
         setIsFlipped(false);
         setViewedCards(new Set());
+        setConfidenceScores({});
+        setShowSummary(false);
         fetchFlashcards(); // Refresh the list from API on exit
     };
 
@@ -301,6 +309,55 @@ export default function FlashcardsPage() {
     };
 
     if (activeSet && activeSet.flashcards) {
+        if (showSummary) {
+            const confidentCount = Object.values(confidenceScores).filter(s => s === 'confident').length;
+            const needsWorkCount = Object.values(confidenceScores).filter(s => s === 'needs_work').length;
+            const noActionCount = activeSet.flashcards.length - confidentCount - needsWorkCount;
+
+            return (
+                <div className="max-w-[700px] mx-auto p-4 py-4 space-y-6">
+                    <div className="flex items-center justify-between">
+                        <button onClick={resetFlashcardState} className="text-slate-500 hover:text-slate-700 dark:hover:text-white flex items-center gap-1.5 text-[11px] font-bold transition-colors">
+                            <X className="w-3.5 h-3.5" /> Exit
+                        </button>
+                    </div>
+
+                    <div className="bg-white dark:bg-[#121214] border-2 border-slate-100 dark:border-slate-800 rounded-[32px] p-8 flex flex-col items-center justify-center text-center shadow-lg shadow-sky-500/5 mt-8">
+                        <div className="w-16 h-16 bg-sky-500/10 rounded-full flex items-center justify-center mb-6">
+                            <CheckCircle2 className="w-8 h-8 text-sky-500" />
+                        </div>
+                        <h2 className="text-2xl font-bold dark:text-white mb-2">Session Completed!</h2>
+                        <p className="text-slate-500 text-sm mb-8">Here is how you did on this flashcard set.</p>
+
+                        <div className="grid grid-cols-3 gap-4 w-full max-w-md mb-8">
+                            <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-4 flex flex-col items-center justify-center gap-2">
+                                <CheckCircle2 className="w-6 h-6 text-green-500" />
+                                <span className="text-xl font-bold text-green-600 dark:text-green-400">{confidentCount}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-green-600/70 dark:text-green-400/70 text-center">Nailed it!</span>
+                            </div>
+                            <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-4 flex flex-col items-center justify-center gap-2">
+                                <RotateCw className="w-6 h-6 text-orange-500" />
+                                <span className="text-xl font-bold text-orange-600 dark:text-orange-400">{needsWorkCount}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600/70 dark:text-orange-400/70 text-center">Missed</span>
+                            </div>
+                            <div className="bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center gap-2">
+                                <SquareStack className="w-6 h-6 text-slate-400" />
+                                <span className="text-xl font-bold text-slate-600 dark:text-slate-300">{noActionCount}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 text-center">No Action</span>
+                            </div>
+                        </div>
+
+                        <button
+                            onClick={resetFlashcardState}
+                            className="bg-primary text-white w-full max-w-md py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
+                        >
+                            Back to Flashcards
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
         const currentCard = activeSet.flashcards[currentCardIndex];
         const progress = ((viewedCards.size) / activeSet.flashcards.length) * 100;
 
@@ -358,10 +415,38 @@ export default function FlashcardsPage() {
                             style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                         >
                             <span className="text-[9px] font-bold text-sky-500 uppercase tracking-widest mb-4 block">Answer</span>
-                            <h2 className="text-xl md:text-2xl font-bold dark:text-white leading-tight px-4">
-                                {currentCard.answer || "No answer available"}
+                            <h2 className="text-xl md:text-2xl font-bold dark:text-white leading-tight px-4 flex-1 flex items-center justify-center">
+                                <div>{currentCard.answer || "No answer available"}</div>
                             </h2>
-                            <div className="mt-8 flex items-center gap-2 text-sky-500/30">
+
+                            <div className="mt-8 flex items-center justify-center gap-4 w-full">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setConfidenceScores(prev => ({ ...prev, [currentCardIndex]: 'needs_work' }));
+                                    }}
+                                    className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 font-bold text-sm transition-all ${confidenceScores[currentCardIndex] === 'needs_work'
+                                            ? 'border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400'
+                                            : 'border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-400'
+                                        }`}
+                                >
+                                    <RotateCw className={`w-4 h-4 ${confidenceScores[currentCardIndex] !== 'needs_work' ? 'text-orange-500 dark:text-orange-400' : ''}`} /> Missed
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setConfidenceScores(prev => ({ ...prev, [currentCardIndex]: 'confident' }));
+                                    }}
+                                    className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 font-bold text-sm transition-all ${confidenceScores[currentCardIndex] === 'confident'
+                                            ? 'border-green-500 bg-green-500/10 text-green-600 dark:text-green-400'
+                                            : 'border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-green-500/50 hover:text-green-600 dark:hover:text-green-400'
+                                        }`}
+                                >
+                                    <CheckCircle2 className={`w-4 h-4 ${confidenceScores[currentCardIndex] !== 'confident' ? 'text-green-500 dark:text-green-400' : ''}`} /> Nailed it!
+                                </button>
+                            </div>
+
+                            <div className="mt-6 flex items-center gap-2 text-sky-500/30">
                                 <RotateCw className="w-3.5 h-3.5" />
                                 <span className="text-[10px] font-bold uppercase tracking-wider">Tap to Flip</span>
                             </div>
@@ -382,7 +467,7 @@ export default function FlashcardsPage() {
                     <div className="flex gap-3">
                         {currentCardIndex === activeSet.flashcards.length - 1 ? (
                             <button
-                                onClick={(e) => { e.stopPropagation(); resetFlashcardState(); }}
+                                onClick={(e) => { e.stopPropagation(); setShowSummary(true); }}
                                 className="bg-primary text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-xs"
                             >
                                 <CheckCircle2 className="w-3.5 h-3.5" /> Finish session
