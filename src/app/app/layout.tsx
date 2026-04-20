@@ -42,7 +42,8 @@ import {
     Map,
     Languages,
     Check,
-    Wand2
+    Wand2,
+    FlaskConical
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
@@ -60,6 +61,7 @@ const navItems = [
     { icon: ListChecks, label: "Practice Test", href: "/app/practice-test", color: "text-pink-500", bgColor: "bg-pink-500/10" },
     { icon: Map, label: "Roadmap", href: "/app/roadmap", color: "text-emerald-500", bgColor: "bg-emerald-500/10" },
     { icon: Film, label: "Explainers", href: "/app/explainers", color: "text-orange-500", bgColor: "bg-orange-500/10" },
+    { icon: FlaskConical, label: "Lab", href: "/app/lab", color: "text-violet-500", bgColor: "bg-violet-500/10" },
     { icon: FileText, label: "Notes & Resources", href: "/app/notes", color: "text-cyan-500", bgColor: "bg-cyan-500/10" },
     { icon: MessageSquare, label: "Shiksha.E (Chat)", href: "/app/chat", color: "text-fuchsia-500", bgColor: "bg-fuchsia-500/10" },
 ];
@@ -228,12 +230,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
 function HistorySection({ urlId, conversations, toggleSidebar }: { urlId: string | null, conversations: any[], toggleSidebar: () => void }) {
     return (
-        <div className="mt-2 mb-4 -mr-2 space-y-1">
-            <div className="flex items-center gap-2 px-4 py-1.5 lg:py-1 mb-1">
-                <HistoryIcon className="w-4 h-4 lg:w-3 lg:h-3 text-slate-600 dark:text-slate-400" />
-                <span className="text-[12px] lg:text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider">History</span>
+        <div className="mt-1 mb-2 -mr-2">
+            <div className="flex items-center gap-1.5 px-4 py-1 mb-0.5">
+                <HistoryIcon className="w-3.5 h-3.5 lg:w-3 lg:h-3 text-slate-600 dark:text-slate-400" />
+                <span className="text-[10px] lg:text-[9px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider">History</span>
             </div>
-            <div className="max-h-[35vh] overflow-y-auto space-y-0.5">
+            <div className="h-[200px] overflow-y-auto space-y-0.5 pb-6 pr-2">
                 {conversations.length > 0 ? (
                     conversations.slice(0, 20).map((conv) => (
                         <HistoryItem
@@ -479,7 +481,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Header */}
-                <header className="h-16 flex items-center justify-between px-4 bg-white dark:bg-[#121214] border-b border-slate-200 dark:border-slate-800 shrink-0 z-20">
+                <header className="relative h-16 flex items-center justify-between px-4 bg-white dark:bg-[#121214] border-b border-slate-200 dark:border-slate-800 shrink-0 z-40">
                     <div className="flex items-center gap-2 flex-1">
                         <button
                             onClick={toggleSidebar}
