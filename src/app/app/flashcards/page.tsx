@@ -426,8 +426,8 @@ export default function FlashcardsPage() {
                                         setConfidenceScores(prev => ({ ...prev, [currentCardIndex]: 'needs_work' }));
                                     }}
                                     className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 font-bold text-sm transition-all ${confidenceScores[currentCardIndex] === 'needs_work'
-                                            ? 'border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400'
-                                            : 'border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-400'
+                                        ? 'border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400'
+                                        : 'border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-400'
                                         }`}
                                 >
                                     <RotateCw className={`w-4 h-4 ${confidenceScores[currentCardIndex] !== 'needs_work' ? 'text-orange-500 dark:text-orange-400' : ''}`} /> Missed
@@ -438,8 +438,8 @@ export default function FlashcardsPage() {
                                         setConfidenceScores(prev => ({ ...prev, [currentCardIndex]: 'confident' }));
                                     }}
                                     className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 font-bold text-sm transition-all ${confidenceScores[currentCardIndex] === 'confident'
-                                            ? 'border-green-500 bg-green-500/10 text-green-600 dark:text-green-400'
-                                            : 'border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-green-500/50 hover:text-green-600 dark:hover:text-green-400'
+                                        ? 'border-green-500 bg-green-500/10 text-green-600 dark:text-green-400'
+                                        : 'border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 hover:border-green-500/50 hover:text-green-600 dark:hover:text-green-400'
                                         }`}
                                 >
                                     <CheckCircle2 className={`w-4 h-4 ${confidenceScores[currentCardIndex] !== 'confident' ? 'text-green-500 dark:text-green-400' : ''}`} /> Nailed it!
