@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { API_BASE_URL } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 
 interface Explainer {
@@ -28,23 +29,14 @@ interface Explainer {
     description: string;
     tags: string[];
     is_active: boolean;
-    duration: number;
+    duration: number | null;
     views_count: number;
     video_url: string;
-    thumbnail_url: string;
+    thumbnail_url: string | null;
+    status?: string;
+    error_message?: string | null;
 }
 
-interface Subject {
-    _id: string;
-    name: string;
-    slug: string;
-}
-
-interface Unit {
-    _id: string;
-    name: string;
-    subject_id: string;
-}
 
 export default function ExplainersPage() {
     const [explainers, setExplainers] = useState<Explainer[]>([]);
@@ -52,17 +44,38 @@ export default function ExplainersPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeFilter, setActiveFilter] = useState<"all" | "video" | "audio">("all");
     const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-    const [selectedExplainer, setSelectedExplainer] = useState<Explainer | null>(null);
+    const router = useRouter();
 
     // Modal states for generation
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [subjects, setSubjects] = useState<Subject[]>([]);
-    const [units, setUnits] = useState<Unit[]>([]);
-    const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
-    const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
-    const [isLoadingSubjects, setIsLoadingSubjects] = useState(false);
-    const [isLoadingUnits, setIsLoadingUnits] = useState(false);
+    const [explainerPrompt, setExplainerPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const explainersRef = React.useRef(explainers);
+    useEffect(() => {
+        explainersRef.current = explainers;
+    }, [explainers]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const processing = explainersRef.current.filter(e => e.status && e.status !== 'completed' && e.status !== 'failed');
+            processing.forEach(async (exp) => {
+                try {
+                    const token = localStorage.getItem("access_token");
+                    const res = await fetch(`${API_BASE_URL}/api/explainer/${exp._id}`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.status === 'completed' || data.status === 'failed') {
+                            setExplainers(prev => prev.map(p => p._id === data._id ? data : p));
+                        }
+                    }
+                } catch (e) {}
+            });
+        }, 15000); // Poll every 15 seconds
+        return () => clearInterval(interval);
+    }, []);
 
     const fetchExplainers = async () => {
         setIsLoading(true);
@@ -84,67 +97,14 @@ export default function ExplainersPage() {
         }
     };
 
-    const fetchSubjects = async () => {
-        setIsLoadingSubjects(true);
-        try {
-            const token = localStorage.getItem("access_token");
-            const response = await fetch(`${API_BASE_URL}/api/subjects/`, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setSubjects(data);
-            }
-        } catch (error) {
-            console.error("Failed to fetch subjects", error);
-        } finally {
-            setIsLoadingSubjects(false);
-        }
-    };
-
-    const fetchUnits = async (subjectId: string) => {
-        setIsLoadingUnits(true);
-        try {
-            const token = localStorage.getItem("access_token");
-            const response = await fetch(`${API_BASE_URL}/api/subjects/${subjectId}/topics`, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setUnits(data);
-            }
-        } catch (error) {
-            console.error("Failed to fetch units", error);
-        } finally {
-            setIsLoadingUnits(false);
-        }
-    };
 
     useEffect(() => {
         fetchExplainers();
     }, []);
 
-    useEffect(() => {
-        if (isModalOpen && subjects.length === 0) {
-            fetchSubjects();
-        }
-    }, [isModalOpen]);
 
-    useEffect(() => {
-        if (selectedSubject) {
-            setUnits([]);
-            fetchUnits(selectedSubject._id);
-            setSelectedUnit(null);
-        } else {
-            setUnits([]);
-        }
-    }, [selectedSubject]);
-
-    const formatDuration = (seconds: number) => {
+    const formatDuration = (seconds?: number | null) => {
+        if (!seconds) return "0:00";
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -164,17 +124,35 @@ export default function ExplainersPage() {
     });
 
     const handleGenerateExplainer = async () => {
-        if (!selectedSubject || !selectedUnit) return;
+        if (!explainerPrompt.trim()) return;
         setIsGenerating(true);
         try {
-            // Mocking generation delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            // Usually this would call an API like /api/generate/explainer
-            // For now we'll just refresh list or show success
-            setIsModalOpen(false);
-            fetchExplainers();
+            const token = localStorage.getItem("access_token");
+            const response = await fetch(`${API_BASE_URL}/api/explainer/generate`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: explainerPrompt.slice(0, 100), // Setting the name based on prompt as required by API
+                    description: explainerPrompt
+                })
+            });
+            
+            if (response.ok) {
+                const newExplainer = await response.json();
+                setExplainers(prev => [newExplainer, ...prev]);
+                setIsModalOpen(false);
+                setExplainerPrompt("");
+            } else {
+                const errorText = await response.text();
+                console.error(`Failed to generate explainer: ${response.status} ${response.statusText}`, errorText);
+                alert(`Generation failed (${response.status}): ${errorText}`);
+            }
         } catch (error) {
-            console.error("Failed to generate explainer", error);
+            console.error("Failed to generate explainer (network error)", error);
+            alert(`Network error: ${error}`);
         } finally {
             setIsGenerating(false);
         }
@@ -280,44 +258,75 @@ export default function ExplainersPage() {
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.2 }}
                                 key={exp._id}
-                                onClick={() => setSelectedExplainer(exp)}
-                                className={`group cursor-pointer flex flex-col ${viewMode === "list" ? "flex-row h-32 bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden" : ""}`}
+                                onClick={() => {
+                                    if (!exp.status || exp.status === 'completed') {
+                                        router.push(`/app/explainers/${exp._id}`);
+                                    }
+                                }}
+                                className={`group flex flex-col ${viewMode === "list" ? "flex-row h-32 bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden" : ""} ${(!exp.status || exp.status === 'completed') ? 'cursor-pointer' : 'opacity-80'}`}
                             >
                                 <div className={`relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 ${viewMode === "list" ? "w-48 h-full shrink-0 rounded-none" : "aspect-video w-full mb-3"}`}>
-                                    <img
-                                        src={exp.thumbnail_url}
-                                        alt={exp.name}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                                        <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
-                                            <Play className="w-5 h-5 fill-current" />
-                                        </div>
-                                    </div>
-                                    <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 backdrop-blur-md text-[10px] font-bold text-white rounded">
-                                        {formatDuration(exp.duration)}
-                                    </div>
-                                    <div className="absolute top-2 left-2 flex gap-1">
-                                        <div className="px-1.5 py-0.5 bg-white/90 dark:bg-black/90 backdrop-blur-md rounded-md flex items-center gap-1 shadow-md">
-                                            {exp.tags.includes('audio') || exp.tags.includes('podcast') ? (
-                                                <Mic2 className="w-2.5 h-2.5 text-primary" />
+                                    {exp.thumbnail_url ? (
+                                        <img
+                                            src={exp.thumbnail_url}
+                                            alt={exp.name}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-200 dark:bg-slate-800 p-4 text-center">
+                                            {exp.status === 'failed' ? (
+                                                <>
+                                                    <X className="w-8 h-8 text-red-500 mb-2" />
+                                                    <span className="text-xs text-red-500 font-bold">Failed</span>
+                                                </>
+                                            ) : typeof exp.status === 'string' && exp.status !== 'completed' ? (
+                                                <>
+                                                    <Loader2 className="w-8 h-8 text-primary animate-spin mb-2" />
+                                                    <span className="text-xs text-primary font-bold animate-pulse">Generating...</span>
+                                                </>
                                             ) : (
-                                                <Video className="w-2.5 h-2.5 text-primary" />
+                                                <Film className="w-8 h-8 text-slate-400" />
                                             )}
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {(!exp.status || exp.status === 'completed') && (
+                                        <>
+                                            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                                                <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+                                                    <Play className="w-5 h-5 fill-current" />
+                                                </div>
+                                            </div>
+                                            <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 backdrop-blur-md text-[10px] font-bold text-white rounded">
+                                                {formatDuration(exp.duration)}
+                                            </div>
+                                            <div className="absolute top-2 left-2 flex gap-1">
+                                                <div className="px-1.5 py-0.5 bg-white/90 dark:bg-black/90 backdrop-blur-md rounded-md flex items-center gap-1 shadow-md">
+                                                    {(exp.tags || []).includes('audio') || (exp.tags || []).includes('podcast') ? (
+                                                        <Mic2 className="w-2.5 h-2.5 text-primary" />
+                                                    ) : (
+                                                        <Video className="w-2.5 h-2.5 text-primary" />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                                 <div className={`flex flex-col ${viewMode === "list" ? "p-4 flex-1 justify-center" : "px-0.5"}`}>
                                     <h3 className="font-bold text-[13.5px] dark:text-white group-hover:text-primary transition-colors line-clamp-2 leading-snug mb-1">{exp.name}</h3>
 
                                     <div className="flex flex-col text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                                        <p className="truncate">Shiksha GPT</p>
+                                        <p className="truncate">{exp.status === 'failed' ? exp.error_message || 'Video generation failed' : 'Shiksha GPT'}</p>
                                         <div className="flex items-center gap-1.5">
                                             <span>Just now</span>
-                                            <span className="w-0.5 h-0.5 rounded-full bg-slate-400" />
-                                            <span className="flex items-center gap-1">
-                                                <Eye className="w-2.5 h-2.5" /> {exp.views_count}
-                                            </span>
+                                            {(!exp.status || exp.status === 'completed') && (
+                                                <>
+                                                    <span className="w-0.5 h-0.5 rounded-full bg-slate-400" />
+                                                    <span className="flex items-center gap-1">
+                                                        <Eye className="w-2.5 h-2.5" /> {exp.views_count}
+                                                    </span>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -327,67 +336,7 @@ export default function ExplainersPage() {
                 </div>
             )}
 
-            {/* Video Player Modal */}
-            <AnimatePresence>
-                {selectedExplainer && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setSelectedExplainer(null)}
-                            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100]"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            className="fixed inset-4 md:inset-10 lg:inset-20 z-[101] flex flex-col items-center bg-black rounded-3xl overflow-hidden shadow-2xl"
-                        >
-                            <button
-                                onClick={() => setSelectedExplainer(null)}
-                                className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all z-10"
-                            >
-                                <X className="w-6 h-6" />
-                            </button>
-                            <div className="w-full flex-1 flex items-center justify-center bg-black">
-                                <video
-                                    src={selectedExplainer.video_url}
-                                    className="max-h-full w-full object-contain"
-                                    controls
-                                    autoPlay
-                                />
-                            </div>
-                            <div className="w-full bg-slate-900/50 backdrop-blur-md p-6 border-t border-white/10">
-                                <div className="max-w-[1000px] mx-auto space-y-4">
-                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                                        <div className="space-y-1">
-                                            <h2 className="text-xl md:text-2xl font-bold text-white">{selectedExplainer.name}</h2>
-                                            <p className="text-slate-400 text-sm">{selectedExplainer.description}</p>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-right">
-                                                <p className="text-white font-bold text-lg">{selectedExplainer.views_count}</p>
-                                                <p className="text-slate-500 text-[10px] uppercase font-bold tracking-widest leading-none">Views</p>
-                                            </div>
-                                            <div className="w-px h-8 bg-white/10" />
-                                            <div className="text-right">
-                                                <p className="text-white font-bold text-lg">{formatDuration(selectedExplainer.duration)}</p>
-                                                <p className="text-slate-500 text-[10px] uppercase font-bold tracking-widest leading-none">Duration</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {selectedExplainer.tags.map(tag => (
-                                            <span key={tag} className="px-3 py-1 bg-white/10 rounded-full text-xs font-bold text-slate-300">#{tag}</span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+
 
             {/* Generate Explainer Modal */}
             <AnimatePresence>
@@ -410,7 +359,7 @@ export default function ExplainersPage() {
                                 <div className="flex items-center justify-between mb-8">
                                     <div>
                                         <h2 className="text-2xl font-bold dark:text-white">Generate Explainer</h2>
-                                        <p className="text-slate-500 text-sm">Select options to create your visual guide</p>
+                                        <p className="text-slate-500 text-sm">Tell us what you want to learn about</p>
                                     </div>
                                     <button
                                         onClick={() => setIsModalOpen(false)}
@@ -420,64 +369,27 @@ export default function ExplainersPage() {
                                     </button>
                                 </div>
 
-                                <div className="space-y-6">
-                                    {/* Subject Selection */}
+                                <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
-                                        <div className="relative">
-                                            <select
-                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm"
-                                                value={selectedSubject?._id || ""}
-                                                onChange={(e) => {
-                                                    const sub = subjects.find(s => s._id === e.target.value);
-                                                    setSelectedSubject(sub || null);
-                                                }}
-                                                disabled={isLoadingSubjects}
-                                            >
-                                                <option value="" className="dark:bg-[#1A1A1E]">
-                                                    {isLoadingSubjects ? "Loading..." : subjects.length === 0 ? "No Subject" : "Select Subject"}
-                                                </option>
-                                                {subjects.map(sub => (
-                                                    <option key={sub._id} value={sub._id} className="dark:bg-[#1A1A1E]">{sub.name}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                {isLoadingSubjects ? <Loader2 className="w-5 h-5 animate-spin text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
-                                            </div>
-                                        </div>
+                                        <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                            What should this explainer cover?
+                                        </label>
+                                        <textarea
+                                            className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm resize-none h-32"
+                                            placeholder="e.g. Explaining Newton's Second Law of Motion (F=ma) with simple examples"
+                                            value={explainerPrompt}
+                                            onChange={(e) => setExplainerPrompt(e.target.value)}
+                                        />
                                     </div>
-
-                                    {/* Unit Selection */}
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Unit / Topic</label>
-                                        <div className="relative">
-                                            <select
-                                                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 appearance-none dark:text-white text-sm disabled:opacity-50"
-                                                value={selectedUnit?._id || ""}
-                                                onChange={(e) => {
-                                                    const unit = units.find(u => u._id === e.target.value);
-                                                    setSelectedUnit(unit || null);
-                                                }}
-                                                disabled={!selectedSubject || isLoadingUnits}
-                                            >
-                                                <option value="" className="dark:bg-[#1A1A1E]">
-                                                    {!selectedSubject ? "Select Subject First" : isLoadingUnits ? "Loading..." : units.length === 0 ? "No Unit" : "Select Unit"}
-                                                </option>
-                                                {units.map(unit => (
-                                                    <option key={unit._id} value={unit._id} className="dark:bg-[#1A1A1E]">{unit.name}</option>
-                                                ))}
-                                            </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                {isLoadingUnits ? <Loader2 className="w-5 h-5 animate-spin text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p className="text-xs text-slate-400 font-medium">
+                                        AI will generate a visual guide and script based on your description.
+                                    </p>
                                 </div>
 
                                 <button
                                     onClick={handleGenerateExplainer}
-                                    disabled={!selectedSubject || !selectedUnit || isGenerating}
-                                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold mt-10 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+                                    disabled={!explainerPrompt.trim() || isGenerating}
+                                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold mt-8 flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
                                 >
                                     {isGenerating ? (
                                         <>
