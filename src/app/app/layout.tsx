@@ -61,7 +61,7 @@ const navItems = [
     { icon: ListChecks, label: "Practice Test", href: "/app/practice-test", color: "text-pink-500", bgColor: "bg-pink-500/10" },
     { icon: Map, label: "Roadmap", href: "/app/roadmap", color: "text-emerald-500", bgColor: "bg-emerald-500/10" },
     { icon: Film, label: "Explainers", href: "/app/explainers", color: "text-orange-500", bgColor: "bg-orange-500/10" },
-    { icon: FlaskConical, label: "Lab", href: "/app/lab", color: "text-violet-500", bgColor: "bg-violet-500/10" },
+    // { icon: FlaskConical, label: "Lab", href: "/app/lab", color: "text-violet-500", bgColor: "bg-violet-500/10" },
     { icon: FileText, label: "Notes & Resources", href: "/app/notes", color: "text-cyan-500", bgColor: "bg-cyan-500/10" },
     { icon: MessageSquare, label: "Shiksha.E (Chat)", href: "/app/chat", color: "text-fuchsia-500", bgColor: "bg-fuchsia-500/10" },
 ];
