@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Bell, Settings, Star, Rocket, Code, Beaker, Bot, HeartPulse, Cpu, ChevronRight, Sparkles, Dna, Microscope, FlaskConical } from "lucide-react";
+import { Search, Bell, Settings, Star, Rocket, Code, Beaker, Bot, HeartPulse, Cpu, ChevronRight, Sparkles, Dna, Microscope, FlaskConical, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -113,10 +113,10 @@ export default function LabPage() {
                         <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed max-w-xs">
                             Go beneath the skin! Explore 3D organs and cells with super-zoom precision.
                         </p>
-                        <button className="px-6 py-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 rounded-2xl text-sm font-bold transition-colors w-max flex items-center gap-2 shadow-sm">
+                        <Link href="/app/lab/anatomy" className="px-6 py-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 rounded-2xl text-sm font-bold transition-colors w-max flex items-center gap-2 shadow-sm">
                             Start Exploration
                             <HeartPulse className="w-4 h-4" />
-                        </button>
+                        </Link>
                     </div>
                     <div className="flex-1 relative h-[300px] sm:h-auto overflow-hidden">
                         <img
@@ -191,11 +191,11 @@ export default function LabPage() {
                     </div>
                 </motion.div>
 
-                {/* Row 3: Circuit Master and AI Playground */}
+                {/* Row 3: Circuit Master, AI Playground and BEMS */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.55 }}
                     className="md:col-span-1 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 p-6 flex flex-col shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
                 >
 
@@ -216,7 +216,7 @@ export default function LabPage() {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
+                    transition={{ delay: 0.6 }}
                     className="md:col-span-1 bg-[#140C40] rounded-3xl border border-transparent p-6 flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
                 >
                     <div className="absolute top-4 right-4 bg-white/10 text-white/80 text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider backdrop-blur-md">
@@ -229,6 +229,36 @@ export default function LabPage() {
                     <p className="text-sm text-slate-300 leading-relaxed mb-6">
                         Chat with our AI and create your own virtual science experiments.
                     </p>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="md:col-span-2 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row overflow-hidden group hover:shadow-md transition-shadow relative"
+                >
+                    <div className="flex-1 p-6 flex flex-col justify-center relative z-10 bg-white/50 dark:bg-[#1A1A1E]/50 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none">
+                        <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center mb-6">
+                            <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">BEMS<br />(Business & Economics)</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-1 max-w-sm">
+                            Dive into Business, Economics, Management, and Social Sciences through interactive simulations.
+                        </p>
+                        <div className="flex items-center mt-auto">
+                            <Link href="/app/lab/bems" className="px-5 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm inline-block">
+                                Launch
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="absolute inset-0 sm:relative sm:flex-1 h-full sm:h-auto overflow-hidden">
+                        <img
+                            src="/lab/bems.png"
+                            alt="BEMS Lab"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 dark:from-[#1A1A1E] dark:via-[#1A1A1E]/80 to-transparent sm:hidden" />
+                    </div>
                 </motion.div>
             </div>
 
@@ -247,7 +277,7 @@ export default function LabPage() {
                     Don't see what you're looking for? Our AI Muse can generate specialized laboratory environments for your specific learning path.
                 </p>
                 <Link href="#" className="text-violet-600 dark:text-violet-400 text-sm font-bold flex items-center gap-1 hover:underline underline-offset-4">
-                    Contact Curriculum Design <ChevronRight className="w-3.5 h-3.5" />
+                    Contact Support <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
             </motion.div>
 
