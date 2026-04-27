@@ -32,6 +32,11 @@ export default function StemWorldPage() {
     const projR = velocity * Math.cos(projAngle * Math.PI / 180) * 1.5;
     const projPath = `M 10 90 Q ${10 + projR / 2} ${90 - projH * 1.5} ${10 + projR} 90`;
 
+    const [incidentAngle, setIncidentAngle] = useState(45);
+    const [refractiveIndex, setRefractiveIndex] = useState(1.5);
+    const sinTheta2 = (1.0 * Math.sin(incidentAngle * Math.PI / 180)) / refractiveIndex;
+    const refractedAngle = Math.asin(sinTheta2) * 180 / Math.PI;
+
     return (
         <div className="max-w-6xl mx-auto space-y-6 px-4 py-2 md:px-6 md:py-4 animate-in fade-in duration-500 pb-20">
             {/* Header & Back Navigation */}
@@ -291,6 +296,83 @@ export default function StemWorldPage() {
                                 </div>
                             </div>
                             <Link href="/app/lab/stem/projectile-motion" className="px-4 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-orange-600/20 flex items-center gap-1.5">
+                                Launch Lab <Rocket className="w-3 h-3" />
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Reflection & Refraction Interactive Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.28 }}
+                    className="bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col"
+                >
+                    <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center p-6 isolate">
+                        <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/40 backdrop-blur-md text-pink-400 border border-pink-400/20 text-[9px] font-black uppercase tracking-widest rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" /> Interactive
+                        </div>
+
+                        {/* Dynamic SVG Visualization */}
+                        <div className="absolute inset-0 p-8 pt-12 pb-6 flex items-center justify-center z-10 pointer-events-none">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" className="opacity-90 drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]" preserveAspectRatio="xMidYMid meet">
+                                {/* Medium 2 background */}
+                                <rect x="0" y="50" width="100" height="50" fill="#3b82f6" fillOpacity="0.1" />
+                                
+                                {/* Interface line */}
+                                <line x1="0" y1="50" x2="100" y2="50" stroke="#475569" strokeWidth="2" />
+                                
+                                {/* Normal line */}
+                                <line x1="50" y1="10" x2="50" y2="90" stroke="#334155" strokeWidth="1" strokeDasharray="4 4" />
+
+                                {/* Incident ray */}
+                                <line x1={50 - 40 * Math.sin(incidentAngle * Math.PI / 180)} y1={50 - 40 * Math.cos(incidentAngle * Math.PI / 180)} x2="50" y2="50" stroke="#ec4899" strokeWidth="2" />
+                                
+                                {/* Reflected ray (opacity lowered to emphasize refraction) */}
+                                <line x1="50" y1="50" x2={50 + 40 * Math.sin(incidentAngle * Math.PI / 180)} y2={50 - 40 * Math.cos(incidentAngle * Math.PI / 180)} stroke="#ec4899" strokeWidth="1.5" className="opacity-40" />
+
+                                {/* Refracted ray */}
+                                <line x1="50" y1="50" x2={50 + 40 * Math.sin(refractedAngle * Math.PI / 180)} y2={50 + 40 * Math.cos(refractedAngle * Math.PI / 180)} stroke="#ec4899" strokeWidth="2" />
+                            </svg>
+                        </div>
+
+                        <div className="absolute w-32 h-32 bg-pink-500/20 blur-3xl rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10" />
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight pr-4">Reflection &<br />Refraction</h3>
+                            <Sparkles className="w-5 h-5 text-pink-500 shrink-0" />
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-center gap-3 mb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">θ₁: {incidentAngle}°</span>
+                                <input
+                                    type="range" min="10" max="80" value={incidentAngle}
+                                    onChange={(e) => setIncidentAngle(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+                                />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">n₂: {refractiveIndex}</span>
+                                <input
+                                    type="range" min="1" max="2.5" step="0.1" value={refractiveIndex}
+                                    onChange={(e) => setRefractiveIndex(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 mt-auto">
+                            <div className="flex -space-x-2">
+                                <div className="w-7 h-7 rounded-full bg-slate-200 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-300 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white dark:border-[#1A1A1E] flex items-center justify-center text-[9px] font-bold text-slate-600">
+                                    +4k
+                                </div>
+                            </div>
+                            <Link href="/app/lab/stem/reflection-refraction" className="px-4 py-1.5 bg-pink-600 hover:bg-pink-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-pink-600/20 flex items-center gap-1.5">
                                 Launch Lab <Rocket className="w-3 h-3" />
                             </Link>
                         </div>

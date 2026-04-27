@@ -59,31 +59,6 @@ interface Message {
     created_at: string;
 }
 
-const formatMarkdown = (text: string) => {
-    if (!text) return '';
-    let t = text.replace(/\\n/g, '\n').replace(/\\r/g, '');
-    
-    // Add newlines before headings ONLY IF they are on the same line (separated by spaces/tabs)
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+(#{1,6}[ \t]+)/g, '$1\n\n$2');
-    
-    // Add newlines before horizontal rules ONLY IF they are on the same line
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+(---)[ \t]+(?=#{1,6}|\w)/g, '$1\n\n$2\n\n');
-    
-    // Add newlines before bullet points ONLY IF they are on the same line
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+([\*\-][ \t]+)/g, '$1\n$2');
-    
-    // Add newlines before numbered lists ONLY IF they are on the same line
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+(\d+\.[ \t]+)/g, '$1\n$2');
-    
-    // Fix squashed tables
-    // 1. Fix row boundaries FIRST. This changes `| |` to `|\n|`
-    t = t.replace(/\|[ \t]+\|/g, '|\n|');
-    // 2. Split headings from tables safely (headings don't appear inside tables)
-    t = t.replace(/(#{1,6}[^|\n]+?)[ \t]+(\|[ \t]+)/g, '$1\n\n$2');
-    
-    return t;
-};
-
 export default function SummariesPage() {
     const [summaries, setSummaries] = useState<Summary[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -436,7 +411,7 @@ export default function SummariesPage() {
                                     td: ({ node, ...props }) => <td className="px-5 py-4 text-sm text-slate-600 dark:text-slate-300 whitespace-normal" {...props} />
                                 }}
                             >
-                                {activeSummary.summary_text ? formatMarkdown(activeSummary.summary_text) : formatMarkdown(activeSummary.summary_preview || '')}
+                                {activeSummary.summary_text ? activeSummary.summary_text.replace(/\\n/g, '\n') : activeSummary.summary_preview?.replace(/\\n/g, '\n')}
                             </ReactMarkdown>
                         </div>
 
@@ -492,9 +467,9 @@ export default function SummariesPage() {
                                         } : {}}
                                     >
                                         {typeof msg.content === 'string'
-                                            ? formatMarkdown(msg.content)
+                                            ? msg.content
                                             : Array.isArray(msg.content)
-                                                ? msg.content.map(item => formatMarkdown(item.text || '')).join('')
+                                                ? msg.content.map(item => item.text || '').join('')
                                                 : ''
                                         }
                                     </ReactMarkdown>

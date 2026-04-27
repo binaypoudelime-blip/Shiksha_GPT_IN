@@ -42,31 +42,6 @@ interface Message {
 
 import { Suspense } from "react";
 
-const formatMarkdown = (text: string) => {
-    if (!text) return '';
-    let t = text.replace(/\\n/g, '\n').replace(/\\r/g, '');
-    
-    // Add newlines before headings ONLY IF they are on the same line (separated by spaces/tabs)
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+(#{1,6}[ \t]+)/g, '$1\n\n$2');
-    
-    // Add newlines before horizontal rules ONLY IF they are on the same line
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+(---)[ \t]+(?=#{1,6}|\w)/g, '$1\n\n$2\n\n');
-    
-    // Add newlines before bullet points ONLY IF they are on the same line
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+([\*\-][ \t]+)/g, '$1\n$2');
-    
-    // Add newlines before numbered lists ONLY IF they are on the same line
-    t = t.replace(/([a-zA-Z0-9.!?":\])])[ \t]+(\d+\.[ \t]+)/g, '$1\n$2');
-    
-    // Fix squashed tables
-    // 1. Fix row boundaries FIRST. This changes `| |` to `|\n|`
-    t = t.replace(/\|[ \t]+\|/g, '|\n|');
-    // 2. Split headings from tables safely (headings don't appear inside tables)
-    t = t.replace(/(#{1,6}[^|\n]+?)[ \t]+(\|[ \t]+)/g, '$1\n\n$2');
-    
-    return t;
-};
-
 function ChatContent() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
@@ -517,9 +492,9 @@ function ChatContent() {
                                                         }}
                                                     >
                                                         {typeof msg.content === 'string'
-                                                            ? formatMarkdown(msg.content)
+                                                            ? msg.content.replace(/\\n/g, '\n')
                                                             : Array.isArray(msg.content)
-                                                                ? msg.content.map(item => formatMarkdown(item.text || '')).join('')
+                                                                ? msg.content.map(item => (item.text || '').replace(/\\n/g, '\n')).join('')
                                                                 : ''
                                                         }
                                                     </ReactMarkdown>
@@ -664,4 +639,3 @@ export default function ChatPage() {
         </Suspense>
     );
 }
-
