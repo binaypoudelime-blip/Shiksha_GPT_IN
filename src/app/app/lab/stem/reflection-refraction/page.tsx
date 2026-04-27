@@ -139,7 +139,7 @@ export default function ReflectionRefractionLab() {
                 </div>
             </div>
             {/* Main Workspace */}
-            <div className="flex-1 w-full max-w-[1600px] mx-auto p-4 flex flex-col lg:flex-row gap-4 pb-8">
+            <div className="flex-1 w-full max-w-[1600px] mx-auto p-4 flex flex-col lg:flex-row lg:items-start gap-4 pb-8">
                 
                 {/* Controls Panel */}
                 <div className="w-full lg:w-[280px] shrink-0 flex flex-col gap-2 overflow-visible pb-2">
@@ -291,9 +291,9 @@ export default function ReflectionRefractionLab() {
                 </div>
 
                 {/* Right Side Column */}
-                <div className="flex-1 flex flex-col gap-3 min-w-0">
+                <div className="flex-1 flex flex-col gap-3 min-w-0 sticky top-4">
                     {/* Simulation Canvas */}
-                    <div className="flex-1 bg-[#050B14] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-lg relative overflow-hidden flex flex-col min-h-[350px] lg:min-h-[420px]">
+                    <div className="w-full bg-[#050B14] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-lg relative overflow-hidden flex flex-col min-h-[350px] lg:min-h-[480px] xl:min-h-[550px]">
                         <div className="absolute top-6 left-6 z-20 flex flex-wrap gap-3 pointer-events-none">
                             <div className="bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold text-white border border-white/10 shadow-lg flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-slate-400" /> n₁ = {n1.toFixed(2)}
