@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Play, Info, Shield, List, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useSidebar } from "@/app/context/SidebarContext";
+import MolarMassCalculatorModal from "./MolarMassCalculatorModal";
 
 interface ElementData {
     name: string;
@@ -18,10 +19,25 @@ interface ElementData {
     electron_configuration: string;
     shells: number[];
     summary: string;
-    boil: number;
-    density: number;
+    boil: number | null;
+    density: number | null;
     bohr_model_image: string;
     block: string;
+    appearance: string | null;
+    discovered_by: string | null;
+    melt: number | null;
+    molar_heat: number | null;
+    named_by: string | null;
+    period: number;
+    source: string;
+    electron_affinity: number | null;
+    electronegativity_pauling: number | null;
+    ionization_energies: number[];
+    image: {
+        url: string;
+        title: string;
+        attribution: string;
+    };
 }
 
 const CATEGORIES = [
@@ -58,15 +74,36 @@ const getCategoryStyles = (normalizedCategory: string) => {
         case "Other Nonmetal": default: return { bg: "bg-[#E8F5E9] dark:bg-[#2E7D32]/20", border: "border-[#C8E6C9] dark:border-[#2E7D32]/30", text: "text-[#2E7D32] dark:text-[#81C784]", dot: "bg-[#2E7D32] dark:bg-[#81C784]" };
     }
 };
+const formatElectronConfiguration = (config: string) => {
+    if (!config) return null;
+    return config.split(' ').map((part, index, array) => {
+        const match = part.match(/^(\[[A-Za-z]+\]|[0-9]+[a-zA-Z])([0-9]*)$/);
+        return (
+            <React.Fragment key={index}>
+                {match ? (
+                    <>
+                        {match[1]}
+                        {match[2] && <sup>{match[2]}</sup>}
+                    </>
+                ) : (
+                    part
+                )}
+                {index < array.length - 1 ? ' ' : ''}
+            </React.Fragment>
+        );
+    });
+};
 
 export default function PeriodicTablePage() {
     const { setOpen } = useSidebar();
     const [elements, setElements] = useState<ElementData[]>([]);
     const [selectedElement, setSelectedElement] = useState<ElementData | null>(null);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [activeTab, setActiveTab] = useState<'overview' | 'properties' | 'safety'>('overview');
     const [activePhaseFilter, setActivePhaseFilter] = useState<string | null>(null);
     const [activeBlockFilter, setActiveBlockFilter] = useState<string | null>(null);
     const [activeCategoryFilter, setActiveCategoryFilter] = useState<string | null>(null);
+    const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
 
     useEffect(() => {
         // Auto-collapse the global sidebar only on initial mount to ensure max screen real-estate.
@@ -130,6 +167,14 @@ export default function PeriodicTablePage() {
                 </div>
                 <div className="flex items-center justify-end pr-3 text-[10px] font-bold text-slate-400 dark:text-slate-500" style={{ gridColumn: '1 / span 3', gridRow: 11 }}>
                     ** Actinides
+                </div>
+
+                {/* Gap placeholders for Lanthanides and Actinides */}
+                <div className="flex items-center justify-center text-sm font-bold text-slate-400 dark:text-slate-500 mt-1" style={{ gridColumn: 4, gridRow: 7 }}>
+                    *
+                </div>
+                <div className="flex items-center justify-center text-sm font-bold text-slate-400 dark:text-slate-500 mt-1" style={{ gridColumn: 4, gridRow: 8 }}>
+                    **
                 </div>
 
                 {/* Category Legend Area inside Grid */}
@@ -247,11 +292,16 @@ export default function PeriodicTablePage() {
                     </Link>
                 </div>
 
-                <div className="px-2 mb-3">
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">Virtual Periodic Table</h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-xs w-full lg:max-w-max truncate">
-                        Explore the building blocks of the universe in our simulated laboratory environment.
-                    </p>
+                <div className="px-2 mb-3 flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">Virtual Periodic Table</h1>
+                        <p className="text-slate-500 dark:text-slate-400 text-xs w-full lg:max-w-max truncate">
+                            Explore the building blocks of the universe in our simulated laboratory environment.
+                        </p>
+                    </div>
+                    <button onClick={() => setIsCalculatorOpen(true)} className="shrink-0 flex items-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm">
+                        Molar Mass Calculator
+                    </button>
                 </div>
 
                 {/* Table Viewport */}
@@ -295,10 +345,13 @@ export default function PeriodicTablePage() {
 
                             {/* Tabs */}
                             <div className="flex items-center justify-center gap-6 mt-8 mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
-                                <button className="text-sm font-bold text-primary border-b-2 border-primary pb-4 -mb-[17px]">Overview</button>
-                                <button className="text-sm font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pb-4 -mb-[17px]">Properties</button>
-                                <button className="text-sm font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pb-4 -mb-[17px]">Safety</button>
+                                <button onClick={() => setActiveTab('overview')} className={`text-sm font-bold pb-4 -mb-[17px] ${activeTab === 'overview' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>Overview</button>
+                                <button onClick={() => setActiveTab('properties')} className={`text-sm font-bold pb-4 -mb-[17px] ${activeTab === 'properties' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>Properties</button>
+                                <button onClick={() => setActiveTab('safety')} className={`text-sm font-bold pb-4 -mb-[17px] ${activeTab === 'safety' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'}`}>Safety</button>
                             </div>
+
+                            {activeTab === 'overview' && (
+                                <div className="animate-in fade-in slide-in-from-right-4 duration-300">
 
                             {/* Bohr Model Card */}
                             <div className="bg-[#0D1117] rounded-3xl p-3 lg:p-4 mb-5 relative overflow-hidden flex flex-col items-center justify-between min-h-[300px] group">
@@ -375,9 +428,11 @@ export default function PeriodicTablePage() {
                                     <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Category</span>
                                     <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400 capitalize">{selectedElement.category}</span>
                                 </div>
-                                <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/50 border-dashed">
-                                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Configuration</span>
-                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{selectedElement.electron_configuration}</span>
+                                <div className="flex items-start justify-between gap-4 py-1 border-b border-slate-100 dark:border-slate-800/50 border-dashed">
+                                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400 shrink-0">Configuration</span>
+                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200 text-right">
+                                        {formatElectronConfiguration(selectedElement.electron_configuration)}
+                                    </span>
                                 </div>
                                 <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/50 border-dashed">
                                     <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Standard Phase</span>
@@ -392,6 +447,18 @@ export default function PeriodicTablePage() {
                                 </div>
                             </div>
 
+                            {/* Image */}
+                            {selectedElement.image?.url && (
+                                <div className="mb-4 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm relative group">
+                                    <img src={selectedElement.image.url} alt={selectedElement.image.title || selectedElement.name} className="w-full h-40 object-cover" />
+                                    {selectedElement.image.title && (
+                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+                                            <p className="text-white text-xs text-center">{selectedElement.image.title}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* Summary */}
                             <div className="bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl p-4 mb-6 border border-indigo-100/50 dark:border-indigo-900/30">
                                 <div className="flex items-center gap-2 mb-2">
@@ -402,6 +469,44 @@ export default function PeriodicTablePage() {
                                     {selectedElement.summary}
                                 </p>
                             </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'properties' && (
+                        <div className="space-y-1 mb-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                            {[
+                                { label: "Appearance", value: selectedElement.appearance },
+                                { label: "Phase", value: selectedElement.phase },
+                                { label: "Category", value: selectedElement.category, capitalize: true },
+                                { label: "Boiling Point", value: selectedElement.boil ? `${selectedElement.boil} K` : null },
+                                { label: "Melting Point", value: selectedElement.melt ? `${selectedElement.melt} K` : null },
+                                { label: "Density", value: selectedElement.density ? `${selectedElement.density} g/cm³` : null },
+                                { label: "Molar Heat", value: selectedElement.molar_heat ? `${selectedElement.molar_heat} J/(mol·K)` : null },
+                                { label: "Electron Affinity", value: selectedElement.electron_affinity ? `${selectedElement.electron_affinity} kJ/mol` : null },
+                                { label: "Electronegativity", value: selectedElement.electronegativity_pauling },
+                                { label: "Ionization Energies", value: selectedElement.ionization_energies?.length ? selectedElement.ionization_energies.join(', ') : null },
+                                { label: "Atomic Number", value: selectedElement.number },
+                                { label: "Period / Group", value: `${selectedElement.period || selectedElement.ypos} / ${selectedElement.xpos}` },
+                                { label: "Discovered By", value: selectedElement.discovered_by },
+                                { label: "Named By", value: selectedElement.named_by },
+                                { label: "Source", value: selectedElement.source ? <a href={selectedElement.source} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline truncate max-w-[150px] inline-block">Wikipedia</a> : null }
+                            ].map((prop, idx) => prop.value ? (
+                                <div key={idx} className="flex items-start justify-between py-2 border-b border-slate-100 dark:border-slate-800/50 border-dashed">
+                                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400 shrink-0">{prop.label}</span>
+                                    <span className={`text-sm font-bold text-slate-700 dark:text-slate-200 text-right ${prop.capitalize ? 'capitalize' : ''}`}>
+                                        {prop.value}
+                                    </span>
+                                </div>
+                            ) : null)}
+                        </div>
+                    )}
+
+                    {activeTab === 'safety' && (
+                        <div className="text-center py-12 text-slate-400 dark:text-slate-500 animate-in fade-in slide-in-from-right-4 duration-300">
+                            <Shield className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                            <p className="text-sm font-medium">Safety data is currently not available for {selectedElement.name}.</p>
+                        </div>
+                    )}
 
                             <button className="mt-auto w-full flex items-center justify-center gap-2 bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 transition-colors py-4 rounded-2xl font-bold">
                                 View Interactive Simulation <ArrowRight className="w-4 h-4" />
@@ -410,6 +515,12 @@ export default function PeriodicTablePage() {
                     )}
                 </div>
             )}
+
+            <MolarMassCalculatorModal 
+                isOpen={isCalculatorOpen} 
+                onClose={() => setIsCalculatorOpen(false)} 
+                elements={elements} 
+            />
         </div>
     );
 }

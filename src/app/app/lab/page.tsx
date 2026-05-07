@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Bell, Settings, Star, Rocket, Code, Beaker, Bot, HeartPulse, Cpu, ChevronRight, Sparkles, Dna, Microscope, FlaskConical, TrendingUp } from "lucide-react";
+import { Search, Bell, Settings, Star, Rocket, Code, Beaker, Bot, HeartPulse, Cpu, ChevronRight, Sparkles, Dna, Microscope, FlaskConical, TrendingUp, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -191,25 +191,33 @@ export default function LabPage() {
                     </div>
                 </motion.div>
 
-                {/* Row 3: Circuit Master, AI Playground and BEMS */}
+                {/* Row 3: World Map and BEMS */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.55 }}
-                    className="md:col-span-1 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 p-6 flex flex-col shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                    className="md:col-span-2 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm flex flex-col group hover:shadow-md transition-shadow relative"
                 >
-
-                    <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center mb-6">
-                        <Cpu className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                    <div className="h-[220px] relative overflow-hidden flex-shrink-0">
+                        <div className="absolute top-4 left-4 w-10 h-10 bg-white/90 dark:bg-[#1A1A1E]/80 backdrop-blur-md flex items-center justify-center rounded-xl z-20 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+                            <Globe className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <img
+                            src="/lab/worldmap.png"
+                            alt="World Map Lab"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Circuit<br />Master</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-1">
-                        Snap together virtual circuits and power up your imagination!
-                    </p>
-                    <div className="flex items-center mt-auto">
-                        <button className="px-5 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm">
-                            Launch
-                        </button>
+                    <div className="p-6 flex flex-col flex-1">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">World Map</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-1 leading-relaxed">
+                            Explore the globe interactively. Discover countries, regions and geographical wonders.
+                        </p>
+                        <div className="flex items-center mt-auto">
+                            <Link href="/app/lab/world-map" className="px-5 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm inline-block">
+                                Launch
+                            </Link>
+                        </div>
                     </div>
                 </motion.div>
 
@@ -217,24 +225,6 @@ export default function LabPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="md:col-span-1 bg-[#140C40] rounded-3xl border border-transparent p-6 flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
-                >
-                    <div className="absolute top-4 right-4 bg-white/10 text-white/80 text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider backdrop-blur-md">
-                        Mystery
-                    </div>
-                    <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mb-6">
-                        <Sparkles className="w-6 h-6 text-indigo-300" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3">AI<br />Playground</h3>
-                    <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                        Chat with our AI and create your own virtual science experiments.
-                    </p>
-                </motion.div>
-
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
                     className="md:col-span-2 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row overflow-hidden group hover:shadow-md transition-shadow relative"
                 >
                     <div className="flex-1 p-6 flex flex-col justify-center relative z-10 bg-white/50 dark:bg-[#1A1A1E]/50 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none">
@@ -259,6 +249,46 @@ export default function LabPage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 dark:from-[#1A1A1E] dark:via-[#1A1A1E]/80 to-transparent sm:hidden" />
                     </div>
+                </motion.div>
+
+                {/* Row 4: Circuit Master and AI Playground */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.65 }}
+                    className="md:col-span-1 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 p-6 flex flex-col shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                >
+
+                    <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center mb-6">
+                        <Cpu className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Circuit<br />Master</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-1">
+                        Snap together virtual circuits and power up your imagination!
+                    </p>
+                    <div className="flex items-center mt-auto">
+                        <button className="px-5 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm">
+                            Launch
+                        </button>
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="md:col-span-1 bg-[#140C40] rounded-3xl border border-transparent p-6 flex flex-col justify-center shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
+                >
+                    <div className="absolute top-4 right-4 bg-white/10 text-white/80 text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wider backdrop-blur-md">
+                        Mystery
+                    </div>
+                    <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mb-6">
+                        <Sparkles className="w-6 h-6 text-indigo-300" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">AI<br />Playground</h3>
+                    <p className="text-sm text-slate-300 leading-relaxed mb-6">
+                        Chat with our AI and create your own virtual science experiments.
+                    </p>
                 </motion.div>
             </div>
 
