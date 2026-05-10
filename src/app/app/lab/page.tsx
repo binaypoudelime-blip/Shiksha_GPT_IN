@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Bell, Settings, Star, Rocket, Code, Beaker, Bot, HeartPulse, Cpu, ChevronRight, Sparkles, Dna, Microscope, FlaskConical, TrendingUp, Globe } from "lucide-react";
+import { Search, Bell, Settings, Star, Rocket, Code, Beaker, Bot, HeartPulse, Cpu, ChevronRight, Sparkles, Dna, Microscope, FlaskConical, TrendingUp, Globe, Palette } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -183,9 +183,9 @@ export default function LabPage() {
                             Build and program virtual robots to solve fun puzzles.
                         </p>
                         <div className="flex items-center justify-between mt-auto">
-                            <button className="px-5 py-2 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm">
+                            <Link href="/app/lab/robo-workshop" className="px-5 py-2 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm inline-block">
                                 Launch
-                            </button>
+                            </Link>
 
                         </div>
                     </div>
@@ -270,6 +270,36 @@ export default function LabPage() {
                         <button className="px-5 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm">
                             Launch
                         </button>
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.67 }}
+                    className="md:col-span-2 bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row overflow-hidden group hover:shadow-md transition-shadow relative"
+                >
+                    <div className="flex-1 p-6 flex flex-col justify-center relative z-10 bg-white/50 dark:bg-[#1A1A1E]/50 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none">
+                        <div className="w-12 h-12 rounded-full bg-pink-50 dark:bg-pink-500/10 flex items-center justify-center mb-6">
+                            <Palette className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Creative<br />Lab</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-1">
+                            Blend technology with creativity. Explore digital painting, Music, Animation, 3D modeling, and interactive design.
+                        </p>
+                        <div className="flex items-center mt-auto">
+                            <Link href="/app/lab/creative-lab" className="px-5 py-2 bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/40 rounded-xl text-sm font-bold transition-colors shadow-sm inline-block">
+                                Launch
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="absolute inset-0 sm:relative sm:flex-1 h-full sm:h-auto overflow-hidden">
+                        <img
+                            src="/lab/creative_lab.jpg"
+                            alt="Creative Lab"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 dark:from-[#1A1A1E] dark:via-[#1A1A1E]/80 to-transparent sm:hidden" />
                     </div>
                 </motion.div>
 
