@@ -129,7 +129,7 @@ export default function BemsLandingPage() {
             </div>
 
             {/* Experiments Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
                 {/* Box 0 - Supply and Demand Interactive Card */}
                 <motion.div
@@ -226,7 +226,72 @@ export default function BemsLandingPage() {
                     </div>
                 </motion.div>
 
-                {/* Box 1 - Business Strategy */}
+                {/* Box 1 - Inflation and Purchasing Power */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.22 }}
+                    className="bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col"
+                >
+                    <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center p-6 isolate">
+                        <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/40 backdrop-blur-md text-rose-400 border border-rose-400/20 text-[9px] font-black uppercase tracking-widest rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" /> Interactive
+                        </div>
+
+                        {/* Animated Visual representation of inflation vs purchasing power */}
+                        <div className="absolute inset-0 p-8 pt-12 pb-6 flex items-center justify-center z-10 pointer-events-none">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" className="overflow-visible drop-shadow-xl group-hover:scale-110 transition-transform duration-500">
+                                {/* Axes */}
+                                <path d="M 10 10 L 10 90 L 90 90" stroke="#64748b" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                
+                                {/* Inflation Curve (Rose) */}
+                                <motion.path 
+                                    d="M 15 85 Q 40 85 60 50 T 85 15" 
+                                    fill="none" stroke="#f43f5e" strokeWidth="3.5" strokeLinecap="round"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+                                />
+
+                                {/* Purchasing Power Curve (Green dashed) */}
+                                <motion.path 
+                                    d="M 15 15 Q 40 15 60 50 T 85 85" 
+                                    fill="none" stroke="#10b981" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="4 4"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity, repeatType: "reverse", delay: 0.2 }}
+                                />
+                            </svg>
+                        </div>
+
+                        <div className="absolute w-32 h-32 bg-rose-500/20 blur-3xl rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10" />
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight pr-4">Inflation &<br />Purchasing Power</h3>
+                            <LineChart className="w-5 h-5 text-rose-500 shrink-0" />
+                        </div>
+
+                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium mb-6 flex-1">
+                            Explore how inflation erodes purchasing power over time and its impact on savings and investments.
+                        </p>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 mt-auto">
+                            <div className="flex -space-x-2">
+                                <div className="w-7 h-7 rounded-full bg-slate-200 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-300 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white dark:border-[#1A1A1E] flex items-center justify-center text-[9px] font-bold text-slate-600">
+                                    +5k
+                                </div>
+                            </div>
+                            <Link href="/app/lab/bems/inflation" className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-rose-600/20 flex items-center gap-1.5">
+                                Explore <TrendingUp className="w-3 h-3" />
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Box 2 - Business Strategy */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
