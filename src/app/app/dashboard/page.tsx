@@ -22,7 +22,11 @@ import {
     StickyNote,
     X,
     Loader2,
-    CheckCircle2
+    CheckCircle2,
+    Calculator,
+    Globe,
+    Timer,
+    DollarSign
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -86,6 +90,56 @@ export default function DashboardPage() {
                         <Plus className="w-4 h-4 text-slate-400 group-hover:text-primary" />
                     </div>
                     <span className="font-bold text-sm text-slate-700 dark:text-slate-300">Upload Files</span>
+                </Link>
+
+                {/* UtilityVerse card */}
+                <Link
+                    href="/app/utilityverse"
+                    className="bg-white dark:bg-[#121214] border border-slate-200 dark:border-slate-800 px-5 py-3 rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group"
+                >
+                    {/* Icons — open layout, staggered bounce */}
+                    <div className="flex items-center gap-2">
+                        {/* Calculator */}
+                        <motion.div
+                            animate={{ y: [0, -7, 0] }}
+                            transition={{ duration: 0.7, repeat: Infinity, repeatDelay: 1.5, delay: 0, ease: "easeInOut" }}
+                            className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-sm"
+                        >
+                            <Calculator className="w-4 h-4 text-white" />
+                        </motion.div>
+                        {/* Globe */}
+                        <motion.div
+                            animate={{ y: [0, -7, 0] }}
+                            transition={{ duration: 0.7, repeat: Infinity, repeatDelay: 1.5, delay: 0.15, ease: "easeInOut" }}
+                            className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-sm"
+                        >
+                            <Globe className="w-4 h-4 text-white" />
+                        </motion.div>
+                        {/* Pomodoro */}
+                        <motion.div
+                            animate={{ y: [0, -7, 0] }}
+                            transition={{ duration: 0.7, repeat: Infinity, repeatDelay: 1.5, delay: 0.30, ease: "easeInOut" }}
+                            className="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-sm"
+                        >
+                            <Timer className="w-4 h-4 text-white" />
+                        </motion.div>
+                        {/* Currency */}
+                        <motion.div
+                            animate={{ y: [0, -7, 0] }}
+                            transition={{ duration: 0.7, repeat: Infinity, repeatDelay: 1.5, delay: 0.45, ease: "easeInOut" }}
+                            className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-sm"
+                        >
+                            <DollarSign className="w-4 h-4 text-white" />
+                        </motion.div>
+                    </div>
+
+                    {/* Vertical divider */}
+                    <div className="h-8 w-px bg-slate-200 dark:bg-slate-700 shrink-0" />
+
+                    <div className="flex flex-col">
+                        <span className="font-bold text-sm text-slate-700 dark:text-slate-300 leading-none">UtilityVerse</span>
+                        <span className="text-[10px] text-slate-400 font-medium mt-0.5">Student Power Tools</span>
+                    </div>
                 </Link>
 
                 <div className="ml-auto hidden md:flex items-center gap-4">

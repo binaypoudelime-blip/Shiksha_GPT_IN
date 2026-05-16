@@ -14,7 +14,9 @@ import {
     Sparkles,
     CheckCircle2,
     Users,
-    Globe2
+    Globe2,
+    Triangle,
+    Leaf
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -36,6 +38,16 @@ export default function StemWorldPage() {
     const [refractiveIndex, setRefractiveIndex] = useState(1.5);
     const sinTheta2 = (1.0 * Math.sin(incidentAngle * Math.PI / 180)) / refractiveIndex;
     const refractedAngle = Math.asin(sinTheta2) * 180 / Math.PI;
+
+    const [voltage, setVoltage] = useState(12);
+    const [resistance, setResistance] = useState(10);
+    const current = (voltage / resistance).toFixed(1);
+
+    const [sideA, setSideA] = useState(30);
+    const [sideB, setSideB] = useState(40);
+    const sideC = Math.sqrt(sideA * sideA + sideB * sideB).toFixed(1);
+
+    const [phValue, setPhValue] = useState(7.0);
 
     return (
         <div className="max-w-6xl mx-auto space-y-6 px-4 py-2 md:px-6 md:py-4 animate-in fade-in duration-500 pb-20">
@@ -244,17 +256,17 @@ export default function StemWorldPage() {
 
                                 {/* Trajectory path */}
                                 <path d={projPath} fill="none" stroke="#f97316" strokeWidth="1.5" strokeDasharray="3 3" className="opacity-60" />
-                                
+
                                 {/* Target or distance marker */}
                                 <line x1="10" y1="94" x2={10 + projR} y2="94" stroke="#64748b" strokeWidth="1" />
                                 <line x1={10 + projR} y1="92" x2={10 + projR} y2="96" stroke="#64748b" strokeWidth="1.5" />
 
                                 {/* Animated Ball */}
                                 <circle r="3.5" fill="#f97316">
-                                    <animateMotion 
-                                        dur={`${Math.max(1, 3.5 - velocity/30)}s`}
+                                    <animateMotion
+                                        dur={`${Math.max(1, 3.5 - velocity / 30)}s`}
                                         repeatCount="indefinite"
-                                        path={projPath} 
+                                        path={projPath}
                                     />
                                 </circle>
                             </svg>
@@ -319,16 +331,16 @@ export default function StemWorldPage() {
                             <svg width="100%" height="100%" viewBox="0 0 100 100" className="opacity-90 drop-shadow-[0_0_15px_rgba(236,72,153,0.3)]" preserveAspectRatio="xMidYMid meet">
                                 {/* Medium 2 background */}
                                 <rect x="0" y="50" width="100" height="50" fill="#3b82f6" fillOpacity="0.1" />
-                                
+
                                 {/* Interface line */}
                                 <line x1="0" y1="50" x2="100" y2="50" stroke="#475569" strokeWidth="2" />
-                                
+
                                 {/* Normal line */}
                                 <line x1="50" y1="10" x2="50" y2="90" stroke="#334155" strokeWidth="1" strokeDasharray="4 4" />
 
                                 {/* Incident ray */}
                                 <line x1={50 - 40 * Math.sin(incidentAngle * Math.PI / 180)} y1={50 - 40 * Math.cos(incidentAngle * Math.PI / 180)} x2="50" y2="50" stroke="#ec4899" strokeWidth="2" />
-                                
+
                                 {/* Reflected ray (opacity lowered to emphasize refraction) */}
                                 <line x1="50" y1="50" x2={50 + 40 * Math.sin(incidentAngle * Math.PI / 180)} y2={50 - 40 * Math.cos(incidentAngle * Math.PI / 180)} stroke="#ec4899" strokeWidth="1.5" className="opacity-40" />
 
@@ -373,6 +385,327 @@ export default function StemWorldPage() {
                                 </div>
                             </div>
                             <Link href="/app/lab/stem/reflection-refraction" className="px-4 py-1.5 bg-pink-600 hover:bg-pink-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-pink-600/20 flex items-center gap-1.5">
+                                Launch Lab <Rocket className="w-3 h-3" />
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Ohm's Law Interactive Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.29 }}
+                    className="bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col"
+                >
+                    <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center p-6 isolate">
+                        <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/40 backdrop-blur-md text-yellow-400 border border-yellow-400/20 text-[9px] font-black uppercase tracking-widest rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" /> Interactive
+                        </div>
+
+                        {/* Dynamic SVG Visualization */}
+                        <div className="absolute inset-0 p-8 pt-12 pb-6 flex items-center justify-center z-10 pointer-events-none">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" className="opacity-90 drop-shadow-[0_0_15px_rgba(250,204,21,0.3)]" preserveAspectRatio="xMidYMid meet">
+                                {/* Wires */}
+                                <rect x="25" y="35" width="50" height="40" fill="none" stroke="#334155" strokeWidth="2" rx="4" />
+
+                                {/* Battery */}
+                                <rect x="15" y="48" width="20" height="14" fill="#0f172a" />
+                                <line x1="20" y1="48" x2="30" y2="48" stroke="#facc15" strokeWidth="2" />
+                                <line x1="16" y1="62" x2="34" y2="62" stroke="#facc15" strokeWidth="4" />
+
+                                {/* Resistor */}
+                                <rect x="40" y="25" width="20" height="20" fill="#0f172a" />
+                                <path d="M 40 35 L 43 31 L 49 39 L 55 31 L 58 35 L 60 35" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinejoin="round" />
+
+                                {/* Current display */}
+                                <text x="50" y="60" fill="#facc15" fontSize="8" fontWeight="bold" textAnchor="middle">
+                                    {current} A
+                                </text>
+
+                                {/* Animated Electrons */}
+                                <circle r="1.5" fill="#facc15">
+                                    <animateMotion
+                                        dur={`${Math.max(0.5, 3 - Number(current) * 0.5)}s`}
+                                        repeatCount="indefinite"
+                                        path="M 25 55 L 25 35 L 75 35 L 75 75 L 25 75 Z"
+                                    />
+                                </circle>
+                                <circle r="1.5" fill="#facc15">
+                                    <animateMotion
+                                        dur={`${Math.max(0.5, 3 - Number(current) * 0.5)}s`}
+                                        begin={`${Math.max(0.5, 3 - Number(current) * 0.5) / 2}s`}
+                                        repeatCount="indefinite"
+                                        path="M 25 55 L 25 35 L 75 35 L 75 75 L 25 75 Z"
+                                    />
+                                </circle>
+                            </svg>
+                        </div>
+
+                        <div className="absolute w-32 h-32 bg-yellow-500/20 blur-3xl rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10" />
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight pr-4">Ohm's<br />Law</h3>
+                            <Zap className="w-5 h-5 text-yellow-500 shrink-0" />
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-center gap-3 mb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">V: {voltage}V</span>
+                                <input
+                                    type="range" min="1" max="24" value={voltage}
+                                    onChange={(e) => setVoltage(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+                                />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">R: {resistance}Ω</span>
+                                <input
+                                    type="range" min="1" max="50" value={resistance}
+                                    onChange={(e) => setResistance(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-yellow-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 mt-auto">
+                            <div className="flex -space-x-2">
+                                <div className="w-7 h-7 rounded-full bg-slate-200 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-300 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white dark:border-[#1A1A1E] flex items-center justify-center text-[9px] font-bold text-slate-600">
+                                    +6k
+                                </div>
+                            </div>
+                            <Link href="/app/lab/stem/ohms-law" className="px-4 py-1.5 bg-yellow-600 hover:bg-yellow-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-yellow-600/20 flex items-center gap-1.5">
+                                Launch Lab <Rocket className="w-3 h-3" />
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Pythagoras Theorem Interactive Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.295 }}
+                    className="bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col"
+                >
+                    <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center p-6 isolate">
+                        <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/40 backdrop-blur-md text-cyan-400 border border-cyan-400/20 text-[9px] font-black uppercase tracking-widest rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" /> Interactive
+                        </div>
+
+                        {/* Dynamic SVG Visualization */}
+                        <div className="absolute inset-0 p-8 pt-12 pb-6 flex items-center justify-center z-10 pointer-events-none">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" className="opacity-90 drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]" preserveAspectRatio="xMidYMid meet">
+                                {/* Triangle */}
+                                <polygon
+                                    points={`20,80 ${20 + sideA},80 20,${80 - sideB}`}
+                                    fill="#06b6d4"
+                                    fillOpacity="0.1"
+                                    stroke="#06b6d4"
+                                    strokeWidth="2.5"
+                                    className="transition-all duration-200"
+                                />
+                                {/* Right angle symbol */}
+                                <polyline
+                                    points={`20,75 25,75 25,80`}
+                                    fill="none"
+                                    stroke="#06b6d4"
+                                    strokeWidth="1.5"
+                                />
+
+                                {/* Side A text */}
+                                <text x={20 + sideA / 2} y="88" fill="#94a3b8" fontSize="6" fontWeight="bold" textAnchor="middle">
+                                    a={sideA}
+                                </text>
+
+                                {/* Side B text */}
+                                <text x="12" y={80 - sideB / 2} fill="#94a3b8" fontSize="6" fontWeight="bold" textAnchor="end">
+                                    b={sideB}
+                                </text>
+
+                                {/* Side C (Hypotenuse) text */}
+                                <text x={20 + sideA / 2 + 2} y={80 - sideB / 2 - 2} fill="#06b6d4" fontSize="7" fontWeight="bold" textAnchor="start">
+                                    c={sideC}
+                                </text>
+                            </svg>
+                        </div>
+
+                        <div className="absolute w-32 h-32 bg-cyan-500/20 blur-3xl rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10" />
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight pr-4">Pythagoras<br />Theorem</h3>
+                            <Triangle className="w-5 h-5 text-cyan-500 shrink-0" />
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-center gap-3 mb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">a: {sideA}</span>
+                                <input
+                                    type="range" min="10" max="60" value={sideA}
+                                    onChange={(e) => setSideA(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                                />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">b: {sideB}</span>
+                                <input
+                                    type="range" min="10" max="60" value={sideB}
+                                    onChange={(e) => setSideB(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 mt-auto">
+                            <div className="flex -space-x-2">
+                                <div className="w-7 h-7 rounded-full bg-slate-200 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-300 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white dark:border-[#1A1A1E] flex items-center justify-center text-[9px] font-bold text-slate-600">
+                                    +7k
+                                </div>
+                            </div>
+                            <Link href="/app/lab/stem/pythagoras" className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-cyan-600/20 flex items-center gap-1.5">
+                                Launch Lab <Rocket className="w-3 h-3" />
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* pH Scale Interactive Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.298 }}
+                    className="bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col"
+                >
+                    <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center p-6 isolate">
+                        <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/40 backdrop-blur-md text-teal-400 border border-teal-400/20 text-[9px] font-black uppercase tracking-widest rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" /> Interactive
+                        </div>
+
+                        {/* Dynamic SVG Visualization */}
+                        <div className="absolute inset-0 p-8 pt-12 pb-6 flex items-center justify-center z-10 pointer-events-none">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" className="opacity-90 drop-shadow-[0_0_15px_rgba(20,184,166,0.3)]" preserveAspectRatio="xMidYMid meet">
+                                {/* Beaker */}
+                                <path d="M 35 30 L 35 70 C 35 75 40 80 50 80 C 60 80 65 75 65 70 L 65 30 Z" fill="none" stroke="#94a3b8" strokeWidth="2" />
+                                <line x1="30" y1="30" x2="70" y2="30" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+
+                                {/* Liquid inside */}
+                                <path
+                                    d="M 35 50 L 35 70 C 35 75 40 80 50 80 C 60 80 65 75 65 70 L 65 50 Z"
+                                    fill={phValue < 7 ? "#ef4444" : phValue > 7 ? "#3b82f6" : "#22c55e"}
+                                    fillOpacity="0.8"
+                                    className="transition-colors duration-300"
+                                />
+
+                                {/* pH Text inside liquid */}
+                                <text x="50" y="68" fill="#ffffff" fontSize="10" fontWeight="bold" textAnchor="middle">
+                                    pH {phValue.toFixed(1)}
+                                </text>
+                            </svg>
+                        </div>
+
+                        <div className="absolute w-32 h-32 bg-teal-500/20 blur-3xl rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10" />
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight pr-4">pH Scale &<br />Acidity</h3>
+                            <Beaker className="w-5 h-5 text-teal-500 shrink-0" />
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-center gap-3 mb-6">
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 w-12 shrink-0">pH: {phValue.toFixed(1)}</span>
+                                <input
+                                    type="range" min="0" max="14" step="0.1" value={phValue}
+                                    onChange={(e) => setPhValue(Number(e.target.value))}
+                                    className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
+                                    style={{
+                                        background: "linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #06b6d4, #3b82f6, #6366f1)"
+                                    }}
+                                />
+                            </div>
+                            <p className="text-[10px] text-slate-500 text-center font-medium mt-1">
+                                {phValue < 3 ? "Strong Acid" : phValue < 7 ? "Weak Acid" : phValue === 7 ? "Neutral" : phValue < 12 ? "Weak Base" : "Strong Base"}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 mt-auto">
+                            <div className="flex -space-x-2">
+                                <div className="w-7 h-7 rounded-full bg-slate-200 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-300 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white dark:border-[#1A1A1E] flex items-center justify-center text-[9px] font-bold text-slate-600">
+                                    +8k
+                                </div>
+                            </div>
+                            <Link href="/app/lab/stem/ph-scale" className="px-4 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-teal-600/20 flex items-center gap-1.5">
+                                Launch Lab <Rocket className="w-3 h-3" />
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Photosynthesis & Respiration */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.299 }}
+                    className="bg-white dark:bg-[#1A1A1E] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col"
+                >
+                    <div className="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center p-6">
+                        <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-black/40 backdrop-blur-md text-green-400 border border-green-400/20 text-[9px] font-black uppercase tracking-widest rounded-md flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-400" /> Module
+                        </div>
+                        <div className="relative">
+                            <Leaf className="w-20 h-20 text-green-500/80 group-hover:scale-110 transition-transform duration-500 relative z-10" strokeWidth={1} />
+                            {/* CO2 Bubbles */}
+                            {[0, 1, 2].map((i) => (
+                                <motion.div
+                                    key={`co2-${i}`}
+                                    className="absolute left-1/2 top-1/4 -translate-x-1/2 flex items-center justify-center pointer-events-none z-20"
+                                    initial={{ opacity: 0, y: 0, scale: 0.5 }}
+                                    animate={{
+                                        opacity: [0, 0.9, 0],
+                                        y: -60,
+                                        x: (i - 1) * 20,
+                                        scale: [0.5, 1, 1.2]
+                                    }}
+                                    transition={{
+                                        duration: 2.5,
+                                        repeat: Infinity,
+                                        delay: i * 0.8,
+                                        ease: "easeOut"
+                                    }}
+                                >
+                                    <div className="w-6 h-6 rounded-full border border-green-400/60 bg-green-500/20 backdrop-blur-[2px] flex items-center justify-center shadow-[0_0_8px_rgba(74,222,128,0.4)]">
+                                        <span className="text-[7px] text-green-100 font-bold tracking-tighter">O₂</span>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                        <div className="absolute w-32 h-32 bg-green-500/20 blur-3xl rounded-full" />
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-3">
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight pr-4">Photosynthesis &<br />Respiration</h3>
+                            <Leaf className="w-5 h-5 text-green-500 shrink-0" />
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium mb-6 flex-1">
+                            Explore the interconnected cycles of energy flow between plants and animals.
+                        </p>
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                            <div className="flex -space-x-2">
+                                <div className="w-7 h-7 rounded-full bg-slate-200 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-300 border-2 border-white dark:border-[#1A1A1E]" />
+                                <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white dark:border-[#1A1A1E] flex items-center justify-center text-[9px] font-bold text-slate-600">
+                                    +8k
+                                </div>
+                            </div>
+                            <Link href="/app/lab/stem/photosynthesis" className="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold rounded-lg uppercase tracking-wider transition-colors shadow-sm shadow-green-600/20 flex items-center gap-1.5">
                                 Launch Lab <Rocket className="w-3 h-3" />
                             </Link>
                         </div>
